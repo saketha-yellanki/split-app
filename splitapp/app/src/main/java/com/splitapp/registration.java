@@ -39,6 +39,7 @@ public class registration extends AppCompatActivity {
                     Toast.makeText(registration.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
                 }
                 Intent intent = new Intent(registration.this, VerifyPhoneActivity.class);
+                intent.putExtra("phonenumber", number);
                 startActivity(intent);
             }
         });
