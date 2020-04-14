@@ -36,6 +36,7 @@
         app:boxBackgroundColor="#FFF"
 
 
+
         >
 
         <com.google.android.material.textfield.TextInputEditText
@@ -45,12 +46,14 @@
             android:ems="10"
             android:hint="Enter Email or Password"
             android:inputType="textEmailAddress"
+
             android:textSize="15dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
@@ -60,18 +63,23 @@
         app:boxCornerRadiusBottomEnd="30dp"
         app:boxCornerRadiusBottomStart="30dp"
         app:boxCornerRadiusTopEnd="30dp"
-        app:boxCornerRadiusTopStart="30dp">
+        app:boxBackgroundColor="#FFF"
+        app:boxCornerRadiusTopStart="30dp"
+
+
+        >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:hint="Enter Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Enter password"
+            android:padding="10dp"
             android:inputType="numberPassword"
-            android:textAlignment="center"
-            android:textSize="15dp"
 
-            />
+
+            android:textSize="15dp" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
