@@ -33,11 +33,13 @@
         app:boxCornerRadiusBottomStart="30dp"
         app:boxCornerRadiusTopEnd="30dp"
         app:boxCornerRadiusTopStart="30dp"
+        app:boxBackgroundColor="#FFF"
 
 
         >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -83,6 +85,14 @@
 
 
         />
+
+    <TextView
+        android:id="@+id/switchToRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="30dp"
+        android:text="@string/SwitchToRegister"
+        android:textAlignment="center" />
 
 
 </LinearLayout>

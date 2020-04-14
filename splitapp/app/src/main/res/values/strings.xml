@@ -7,6 +7,8 @@
     <string name="confirm_pass_request">Confirm password</string>
     <string name="mobile_request">Enter Your Mobile Number</string>
     <string name="login_button">Login</string>
+    <string name="SwitchToRegister">New to SplitApp? Register here.</string>
+    <string name="switchToLogin">Already have an Account? Login.</string>
 
 
 </resources>

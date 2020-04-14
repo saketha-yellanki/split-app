@@ -35,7 +35,7 @@
     <LinearLayout
         android:id="@+id/reg_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="565dp"
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
@@ -170,8 +170,16 @@
             android:id="@+id/reg_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="50dp"
             android:text="Done" />
+
+        <TextView
+            android:id="@+id/switchToLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="@string/switchToLogin"
+            android:textAlignment="center" />
 
     </LinearLayout>
 
