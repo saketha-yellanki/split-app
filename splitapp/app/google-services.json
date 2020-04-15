@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "162082576454-5u89mogqpo5dicjrjierr629ifee2em2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.splitapp",
+            "certificate_hash": "2b4e72990c4c2c22416e9c8481190fb2f45df353"
+          }
+        },
+        {
           "client_id": "162082576454-e09f5l9chtbfljfknp1sk1roa9finceo.apps.googleusercontent.com",
           "client_type": 3
         }
