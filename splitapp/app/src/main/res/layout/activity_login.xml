@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:fontFamily="cursive"
-        android:text="Sign In"
+        android:text="sign In"
         android:textAlignment="center"
         android:textColor="#FFF"
 
