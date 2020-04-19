@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3CCD94"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:padding="30dp"
     tools:context=".LoginActivity">
@@ -16,11 +16,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:fontFamily="cursive"
-        android:text="Sign In"
+        android:text="@string/sign_in_req"
         android:textAlignment="center"
         android:textColor="#FFF"
-
-        android:textSize="90dp" />
+        android:textSize="90sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -33,27 +32,22 @@
         app:boxCornerRadiusBottomStart="30dp"
         app:boxCornerRadiusTopEnd="30dp"
         app:boxCornerRadiusTopStart="30dp"
-        app:boxBackgroundColor="#FFF"
-
-
-
-        >
+        app:boxBackgroundColor="#FFF">
 
         <com.google.android.material.textfield.TextInputEditText
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Enter Email or Phone no."
+            android:hint="@string/login_cred_req"
+            android:textColor="@android:color/white"
             android:inputType="textEmailAddress"
-
-            android:textSize="15dp" />
+            android:textSize="20sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
@@ -63,23 +57,16 @@
         app:boxCornerRadiusBottomEnd="30dp"
         app:boxCornerRadiusBottomStart="30dp"
         app:boxCornerRadiusTopEnd="30dp"
-        app:boxBackgroundColor="#FFF"
-        app:boxCornerRadiusTopStart="30dp"
-
-
-        >
+        app:boxCornerRadiusTopStart="30dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:hint="Enter Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:padding="10dp"
+            android:hint="@string/pass_request"
             android:inputType="numberPassword"
-
-
-            android:textSize="15dp" />
-
+            android:textAlignment="center"
+            android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -89,10 +76,7 @@
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="50dp"
         android:padding="15dp"
-        android:text="@string/login_button"
-
-
-        />
+        android:text="@string/login_button" />
 
     <TextView
         android:id="@+id/switchToRegister"

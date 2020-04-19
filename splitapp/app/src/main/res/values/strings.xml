@@ -9,6 +9,10 @@
     <string name="login_button">Login</string>
     <string name="SwitchToRegister">New to SplitApp? Register here.</string>
     <string name="switchToLogin">Already have an Account? Login.</string>
+    <string name="reg_confirm">Register</string>
+    <string name="sign_in_req">sign in</string>
+    <string name="login_cred_req">Enter Email or Password</string>
+    <string name="sign_out_confirm">sign out</string>
 
 
 </resources>

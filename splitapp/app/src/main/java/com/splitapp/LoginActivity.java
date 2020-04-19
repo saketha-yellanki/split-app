@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class LoginActivity extends AppCompatActivity {
 
     @Override
@@ -29,7 +31,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(@NonNull View widget) {
                 Intent myIntent = new Intent(LoginActivity.this, registration.class);
+                FirebaseAuth.getInstance().signOut();
                 startActivity(myIntent);
+                finish();
 
             }
 
