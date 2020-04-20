@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.android.material.button.MaterialButton;
@@ -19,13 +21,21 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class VerifyPhoneActivity extends AppCompatActivity {
 
     private String verificationId;
     private FirebaseAuth mAuth;
+    String username;
+    String user_email;
+    String user_number;
+    private FirebaseFirestore db;
 
     private ProgressBar progressBar;
     private TextInputEditText otp_edit_text;
@@ -57,14 +67,20 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_phone);
 
+        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         progressBar = findViewById(R.id.progressBar);
         otp_edit_text = findViewById(R.id.otp_edit);
         signin_btn = findViewById(R.id.sign_in_btn);
 
-        String phoneNumber = getIntent().getStringExtra("phonenumber");
-        sendVerificationCode(phoneNumber);
+        //Intent i = getIntent();
+        Bundle b = getIntent().getExtras();
+        username = b.getString("username");
+        user_email = b.getString("user_email");
+        user_number = b.getString("user_number");
+
+        sendVerificationCode(user_number);
 
         signin_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +92,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     otp_edit_text.requestFocus();
                     return;
                 }
+
                 verifyCode(code);
             }
         });
@@ -94,6 +111,8 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            send_data(username, user_email, user_number);
+
                             Intent intent = new Intent(VerifyPhoneActivity.this, ProfileActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -108,5 +127,27 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         PhoneAuthProvider.getInstance().verifyPhoneNumber(phoneNumber, 60, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, mCallBack);
 
+    }
+
+    public void send_data(String username, String user_email, String user_mobile) {
+
+        Map<String, Object> note = new HashMap<>();
+        note.put("username", username);
+        note.put("user_email", user_email);
+        note.put("user_mobile", user_mobile);
+
+        db.collection("users").add(note)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(VerifyPhoneActivity.this, "Successful", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(VerifyPhoneActivity.this, "Failed", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }
