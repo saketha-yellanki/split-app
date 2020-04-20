@@ -1,5 +1,5 @@
 package com.splitapp;
-import java.util.Map;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.text.SpannedString;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,21 +17,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
 
 public class registration extends AppCompatActivity {
 
     private static final String TAG = "Mainactivity";
     private static final String KEY_NAME="name";
     private static final String KEY_EMAIL = "email";
-    private FirebaseFirestore db ;
+
 
     TextInputEditText name;
     TextInputEditText email;
@@ -43,7 +36,7 @@ public class registration extends AppCompatActivity {
     LinearLayout reg_lin_layout;
     TextView SwitchToLogin;
 
-    FirebaseAuth mAuth;
+    //FirebaseAuth mAuth;
 
 
     @Override
@@ -51,18 +44,30 @@ public class registration extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         findViews();
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+
+        //mAuth = FirebaseAuth.getInstance();
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String username = name.getText().toString();
+                String user_email = email.getText().toString();
+                //String user_mobile = mobile.getText().toString();
                 String number = "+91 " + mobile.getText().toString();
+
                 if (number.isEmpty() || number.length() < 13) {
                     Toast.makeText(registration.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(registration.this, VerifyPhoneActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username", username);
+                    bundle.putString("user_email", user_email);
+                    //bundle.putString("user_mobile",user_mobile);
+                    bundle.putString("user_number", number);
+                    intent.putExtras(bundle);
+
+                    startActivity(intent);
                 }
-                Intent intent = new Intent(registration.this, VerifyPhoneActivity.class);
-                intent.putExtra("phonenumber", number);
-                startActivity(intent);
             }
         });
 
@@ -113,27 +118,4 @@ public class registration extends AppCompatActivity {
         SwitchToLogin = findViewById(R.id.switchToLogin);
     }
 
-    public void save_data(){
-        String username = name.getText().toString();
-        String user_email = email.getText().toString();
-        String user_mobile = mobile.getText().toString();
-
-        Map<String, Object> note = new HashMap<>();
-        note.put("Username",username);
-        note.put("User-email",user_email);
-        note.put("User-mobile",user_mobile);
-        db.collection("Users").document("details").set(note)
-                  .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("UserData","Details has been saved");
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("Userdata","Details has not been saved",e);
-            }
-        });
-    }
 }
