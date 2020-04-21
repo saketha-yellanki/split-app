@@ -76,6 +76,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         user_email = b.getString("user_email");
         user_number = b.getString("user_number");
         password = b.getString("password");
+        password = encryption(password);
 
         sendVerificationCode(user_number);
 
@@ -143,5 +144,19 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                         Toast.makeText(VerifyPhoneActivity.this, "Failed", Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+    public static final String ALPHABET = "0123456789";
+    public String encryption(String password){
+        //ceaser cipher
+        password = password.toLowerCase();
+        String ciphertext = "";
+        for (int i = 0; i < password.length(); i++)
+        {
+            int charPosition = ALPHABET.indexOf(password.charAt(i));
+            int keyVal = (3 + charPosition) % 10;
+            char replaceVal = ALPHABET.charAt(keyVal);
+            ciphertext += replaceVal;
+        }
+        return ciphertext;
     }
 }
