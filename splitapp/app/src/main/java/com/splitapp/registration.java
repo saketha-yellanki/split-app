@@ -62,8 +62,6 @@ public class registration extends AppCompatActivity {
                 }
             }
         });
-
-
         String text = "Already have an Account? Login.";
         SpannableString ss = new SpannableString(text);
         ClickableSpan clickableSpan = new ClickableSpan() {
@@ -83,9 +81,6 @@ public class registration extends AppCompatActivity {
         ss.setSpan(clickableSpan, 0, 30, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE);
         SwitchToLogin.setText(ss);
         SwitchToLogin.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-
     }
 
     @Override
