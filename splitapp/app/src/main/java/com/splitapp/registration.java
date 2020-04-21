@@ -13,20 +13,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class registration extends AppCompatActivity {
-
-    private static final String TAG = "Mainactivity";
-    private static final String KEY_NAME="name";
-    private static final String KEY_EMAIL = "email";
-
-
     TextInputEditText name;
     TextInputEditText email;
     TextInputEditText password;
@@ -37,8 +29,6 @@ public class registration extends AppCompatActivity {
     TextView SwitchToLogin;
 
     //FirebaseAuth mAuth;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +44,7 @@ public class registration extends AppCompatActivity {
                 String user_email = email.getText().toString();
                 //String user_mobile = mobile.getText().toString();
                 String number = "+91 " + mobile.getText().toString();
+                String password = confirm_password.getText().toString();
 
                 if (number.isEmpty() || number.length() < 13) {
                     Toast.makeText(registration.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
@@ -64,6 +55,7 @@ public class registration extends AppCompatActivity {
                     bundle.putString("user_email", user_email);
                     //bundle.putString("user_mobile",user_mobile);
                     bundle.putString("user_number", number);
+                    bundle.putString("password",password);
                     intent.putExtras(bundle);
 
                     startActivity(intent);

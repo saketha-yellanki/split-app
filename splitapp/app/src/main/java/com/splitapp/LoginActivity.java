@@ -1,5 +1,4 @@
 package com.splitapp;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,10 +9,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
@@ -22,8 +19,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
         TextView SwitchToRegister = findViewById(R.id.switchToRegister);
         String text = "New to SplitApp? Register here";
         SpannableString ss = new SpannableString(text);
@@ -46,15 +41,6 @@ public class LoginActivity extends AppCompatActivity {
         ss.setSpan(clickableSpan, 16, 30, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE);
         SwitchToRegister.setText(ss);
         SwitchToRegister.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-
-
-
-
-
-
-
     }
 
 

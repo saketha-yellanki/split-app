@@ -1,14 +1,11 @@
 package com.splitapp;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,11 +20,9 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 public class VerifyPhoneActivity extends AppCompatActivity {
 
     private String verificationId;
@@ -35,6 +30,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     String username;
     String user_email;
     String user_number;
+    String password;
     private FirebaseFirestore db;
 
     private ProgressBar progressBar;
@@ -79,6 +75,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         username = b.getString("username");
         user_email = b.getString("user_email");
         user_number = b.getString("user_number");
+        password = b.getString("password");
 
         sendVerificationCode(user_number);
 
@@ -96,8 +93,6 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                 verifyCode(code);
             }
         });
-
-
     }
 
     private void verifyCode(String code) {
@@ -111,7 +106,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            send_data(username, user_email, user_number);
+                            send_data(username, user_email, user_number, password);
 
                             Intent intent = new Intent(VerifyPhoneActivity.this, ProfileActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -126,16 +121,15 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     private void sendVerificationCode(String phoneNumber) {
         progressBar.setVisibility(View.VISIBLE);
         PhoneAuthProvider.getInstance().verifyPhoneNumber(phoneNumber, 60, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, mCallBack);
-
     }
 
-    public void send_data(String username, String user_email, String user_mobile) {
+    public void send_data(String username, String user_email, String user_mobile, String password) {
 
         Map<String, Object> note = new HashMap<>();
         note.put("username", username);
         note.put("user_email", user_email);
         note.put("user_mobile", user_mobile);
-
+        note.put("password",password);
         db.collection("users").add(note)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
