@@ -145,16 +145,16 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     }
                 });
     }
-    public static final String ALPHABET = "0123456789";
+    //do not change the value of this string
+    public static final String ALPHABET = "acegikmoqs";
     public String encryption(String password){
-        //ceaser cipher
+        //substitution cipher
         password = password.toLowerCase();
         String ciphertext = "";
         for (int i = 0; i < password.length(); i++)
         {
             int charPosition = ALPHABET.indexOf(password.charAt(i));
-            int keyVal = (3 + charPosition) % 10;
-            char replaceVal = ALPHABET.charAt(keyVal);
+            char replaceVal = ALPHABET.charAt(charPosition);
             ciphertext += replaceVal;
         }
         return ciphertext;
