@@ -27,7 +27,6 @@ public class registration extends AppCompatActivity {
     Button register_btn;
     LinearLayout reg_lin_layout;
     TextView SwitchToLogin;
-
     //FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

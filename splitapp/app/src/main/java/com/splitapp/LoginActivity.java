@@ -6,16 +6,21 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannedString;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
@@ -23,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     TextInputEditText password;
     Button login_btn;
     private View SwitchToRegister;
+    FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,25 @@ public class LoginActivity extends AppCompatActivity {
                 String pass_word = password.getText().toString();
                 pass_word = encryption(pass_word);
                 // now compare email and then check corresponding password if it is a match or not
+                if(TextUtils.isEmpty(user_email)){
+                    email.setError("Email.is.required");
+                    return;
+                }
+                if(TextUtils.isEmpty(pass_word)){
+                    email.setError("password.is.empty");
+                    return;
+                }
+                fAuth.signInWithEmailAndPassword(user_email,pass_word).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "login succssfll", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
         TextView SwitchToRegister = findViewById(R.id.switchToRegister);
