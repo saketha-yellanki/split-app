@@ -8,8 +8,6 @@
     android:orientation="vertical"
     android:padding="30dp"
     tools:context=".LoginActivity">
-
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
@@ -35,18 +33,17 @@
         app:boxBackgroundColor="#FFF">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id = "@+id/email_edit"
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/login_cred_req"
+            android:hint="Enter Email"
             android:textColor="@android:color/white"
             android:inputType="textEmailAddress"
             android:textSize="20sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,6 +57,7 @@
         app:boxCornerRadiusTopStart="30dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -85,6 +83,4 @@
         android:paddingTop="30dp"
         android:text="@string/SwitchToRegister"
         android:textAlignment="center" />
-
-
 </LinearLayout>
