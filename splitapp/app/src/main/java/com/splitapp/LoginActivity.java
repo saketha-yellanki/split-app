@@ -31,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String user_email = email.getText().toString();
                 String pass_word = password.getText().toString();
+                pass_word = encryption(pass_word);
+                // now compare email and then check corresponding password if it is a match or not
             }
         });
         TextView SwitchToRegister = findViewById(R.id.switchToRegister);
@@ -58,6 +60,20 @@ public class LoginActivity extends AppCompatActivity {
     void findViews() {
         email = findViewById(R.id.email_edit);
         password = findViewById(R.id.password);
+    }
+    //do not change the value of this string
+    public static final String ALPHABET = "acegikmoqs";
+    public String encryption(String password){
+        //substitution cipher
+        password = password.toLowerCase();
+        String ciphertext = "";
+        for (int i = 0; i < password.length(); i++)
+        {
+            int charPosition = ALPHABET.indexOf(password.charAt(i));
+            char replaceVal = ALPHABET.charAt(charPosition);
+            ciphertext += replaceVal;
+        }
+        return ciphertext;
     }
 
 }
