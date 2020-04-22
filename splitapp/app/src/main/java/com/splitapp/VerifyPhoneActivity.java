@@ -146,7 +146,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                 });
     }
     //do not change the value of this string
-    public static final String ALPHABET = "acegikmoqs";
+    public static final String ALPHABET = "0123456789";
     public String encryption(String password){
         //substitution cipher
         password = password.toLowerCase();
@@ -154,7 +154,8 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         for (int i = 0; i < password.length(); i++)
         {
             int charPosition = ALPHABET.indexOf(password.charAt(i));
-            char replaceVal = ALPHABET.charAt(charPosition);
+            int keyval = (3+charPosition)%10;
+            char replaceVal = ALPHABET.charAt(keyval);
             ciphertext += replaceVal;
         }
         return ciphertext;
