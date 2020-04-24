@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (user_email.isEmpty() || pass_word.length() < 13) {
-                    Toast.makeText(LoginActivity.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Please Enter Valid emailid or password", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(LoginActivity.this, VerifyPhoneActivity.class);
                     Bundle bundle = new Bundle();
