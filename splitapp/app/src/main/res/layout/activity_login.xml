@@ -78,10 +78,19 @@
         android:text="@string/login_button" />
 
     <TextView
+        android:id="@+id/forgotPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="30dp"
+        android:text="@string/forgot_pass"
+        android:textAlignment="center" />
+
+    <TextView
         android:id="@+id/switchToRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="30dp"
         android:text="@string/SwitchToRegister"
         android:textAlignment="center" />
+
 </LinearLayout>

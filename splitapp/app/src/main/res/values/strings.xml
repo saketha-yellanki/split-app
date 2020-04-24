@@ -13,6 +13,6 @@
     <string name="sign_in_req">sign in</string>
     <string name="login_cred_req">Enter Email or Password</string>
     <string name="sign_out_confirm">sign out</string>
-
+    <string name="forgot_pass">Forgot your password?</string>
 
 </resources>
