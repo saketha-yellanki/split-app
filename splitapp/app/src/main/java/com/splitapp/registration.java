@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannedString;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
@@ -17,16 +18,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class registration extends AppCompatActivity {
     TextInputEditText name;
     TextInputEditText email;
-    TextInputEditText password;
+    TextInputEditText user_password;
     TextInputEditText confirm_password;
     TextInputEditText mobile;
     Button register_btn;
@@ -40,45 +38,58 @@ public class registration extends AppCompatActivity {
         findViews();
 
         mAuth = FirebaseAuth.getInstance();
+
+        if (mAuth.getCurrentUser() != null) {
+            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+        }
+
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String username = name.getText().toString();
-                String user_email = email.getText().toString();
+                final String username = name.getText().toString();
+                final String user_email = email.getText().toString();
                 //String user_mobile = mobile.getText().toString();
-                String number = "+91 " + mobile.getText().toString();
-                String password = confirm_password.getText().toString();
+                final String number = "+91 " + mobile.getText().toString();
+                final String password = user_password.getText().toString();
+                final String conf_pass = confirm_password.getText().toString();
+
+                if (TextUtils.isEmpty(user_email)) {
+                    email.setError("Email is required");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(password)) {
+                    user_password.setError("Password is required");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(conf_pass)) {
+                    user_password.setError("Password is required");
+                    return;
+                }
+
+                if (!password.equals(conf_pass)) {
+                    Toast.makeText(registration.this, "Pasword Do Not Match", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (number.isEmpty() || number.length() < 13) {
+                    Toast.makeText(registration.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(registration.this, VerifyPhoneActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username", username);
+                    bundle.putString("user_email", user_email);
+                    //bundle.putString("user_mobile",user_mobile);
+                    bundle.putString("user_number", number);
+                    bundle.putString("password", password);
+                    intent.putExtras(bundle);
+
+                    startActivity(intent);
+                }
 
 
-//                if (number.isEmpty() || number.length() < 13) {
-//                    Toast.makeText(registration.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Intent intent = new Intent(registration.this, VerifyPhoneActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("username", username);
-//                    bundle.putString("user_email", user_email);
-//                    //bundle.putString("user_mobile",user_mobile);
-//                    bundle.putString("user_number", number);
-//                    bundle.putString("password",password);
-//                    intent.putExtras(bundle);
-//
-//                    startActivity(intent);
-//                }
-
-
-                mAuth.createUserWithEmailAndPassword(user_email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(registration.this, "User Created", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        } else {
-                            Toast.makeText(registration.this, "Error" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-
-                        }
-                    }
-                });
 
             }
         });
@@ -117,7 +128,7 @@ public class registration extends AppCompatActivity {
     void findViews() {
         name = findViewById(R.id.name_edit);
         email = findViewById(R.id.email_edit);
-        password = findViewById(R.id.pass_edit);
+        user_password = findViewById(R.id.pass_edit);
         confirm_password = findViewById(R.id.conf_pass_edit);
         mobile = findViewById(R.id.mobile_edit);
         register_btn = findViewById(R.id.reg_btn);

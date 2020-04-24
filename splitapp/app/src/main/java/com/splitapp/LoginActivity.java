@@ -20,9 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -42,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         db = FirebaseFirestore.getInstance();
+        fAuth = FirebaseAuth.getInstance();
         findViews();
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,15 +62,28 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (user_email.isEmpty() || pass_word.length() < 13) {
-                    Toast.makeText(LoginActivity.this, "Please Enter Valid emailid or password", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(LoginActivity.this, VerifyPhoneActivity.class);
-                    Bundle bundle = new Bundle();
-                    intent.putExtra("mobile", user_email);
+                fAuth.signInWithEmailAndPassword(user_email, pass_word).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "error:" + task.getException(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
 
-                    startActivity(intent);
-                }
+
+//                if (user_email.isEmpty() || pass_word.length() < 13) {
+//                    Toast.makeText(LoginActivity.this, "Please Enter Valid emailid or password", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    intent.putExtra("mobile", user_email);
+//
+//                    startActivity(intent);
+//                }
 
 
 
@@ -139,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         login_btn = findViewById(R.id.button);
         forgotPasswordLink=findViewById(R.id.forgotPassword);
-        fAuth=FirebaseAuth.getInstance();
+
     }
 
 }

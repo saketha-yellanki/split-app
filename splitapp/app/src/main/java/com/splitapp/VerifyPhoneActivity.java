@@ -1,11 +1,15 @@
 package com.splitapp;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -14,12 +18,15 @@ import com.google.android.gms.tasks.TaskExecutors;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -91,6 +98,8 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                 }
 
                 verifyCode(code);
+
+
             }
         });
     }
@@ -106,13 +115,15 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            send_data(username, user_email, user_number, password);
-
+                            extend(user_email, password);
                             Intent intent = new Intent(VerifyPhoneActivity.this, ProfileActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(VerifyPhoneActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(VerifyPhoneActivity.this, registration.class));
+                            finish();
                         }
                     }
                 });
@@ -123,23 +134,71 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(phoneNumber, 60, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, mCallBack);
     }
 
-    public void send_data(String username, String user_email, String user_mobile, String password) {
+    public void send_data(String username, String user_email, String user_mobile) {
 
-        Map<String, Object> note = new HashMap<>();
-        note.put("username", username);
-        note.put("user_email", user_email);
-        note.put("user_mobile", user_mobile);
-        db.collection("users").add(note)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        FirebaseUser f_user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (f_user != null) {
+            final String uid = f_user.getUid();
+            Map<String, Object> note = new HashMap<>();
+            note.put("user_email", user_email);
+            note.put("user_mobile", user_mobile);
+            note.put("user_name", username);
+
+            Log.d("uid ", uid);
+            db.collection("users").document(uid).set(note)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(VerifyPhoneActivity.this, uid, Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(VerifyPhoneActivity.this, "Failed", Toast.LENGTH_LONG).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(VerifyPhoneActivity.this, "user not logged in", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+//    public void link_email(final String mEmail, final String mPassword){
+//
+//        mAuth.createUserWithEmailAndPassword(mEmail, mPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+//                if (task.isSuccessful()) {
+//                    //Toast.makeText(VerifyPhoneActivity.this, "User Created", Toast.LENGTH_LONG).show();
+//                    //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                    extend(mEmail,mPassword);
+//
+//
+//                } else {
+//                    Toast.makeText(VerifyPhoneActivity.this, "Error" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//
+//                }
+//            }
+//        });
+//
+//    }
+
+    public void extend(String mEmail, String mPassword) {
+        AuthCredential credential = EmailAuthProvider.getCredential(mEmail, mPassword);
+        mAuth.getCurrentUser().linkWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(VerifyPhoneActivity.this, "Successful", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(VerifyPhoneActivity.this, "Failed", Toast.LENGTH_LONG).show();
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            send_data(username, user_email, user_number);
+                            Toast.makeText(VerifyPhoneActivity.this, "Linked email successfully", Toast.LENGTH_LONG).show();
+                        } else {
+
+                            Toast.makeText(VerifyPhoneActivity.this, "Authentication failed." + task.getException(), Toast.LENGTH_LONG).show();
+                            Log.i("link error", task.getException().toString());
+                        }
                     }
                 });
     }
