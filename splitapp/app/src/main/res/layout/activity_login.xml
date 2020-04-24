@@ -62,7 +62,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/pass_request"
-            android:inputType="numberPassword"
+            android:inputType="textPassword"
+            android:padding="10dp"
             android:textAlignment="center"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>

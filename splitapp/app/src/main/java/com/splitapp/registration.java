@@ -13,9 +13,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class registration extends AppCompatActivity {
@@ -27,14 +32,14 @@ public class registration extends AppCompatActivity {
     Button register_btn;
     LinearLayout reg_lin_layout;
     TextView SwitchToLogin;
-    //FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         findViews();
 
-        //mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,20 +50,36 @@ public class registration extends AppCompatActivity {
                 String number = "+91 " + mobile.getText().toString();
                 String password = confirm_password.getText().toString();
 
-                if (number.isEmpty() || number.length() < 13) {
-                    Toast.makeText(registration.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(registration.this, VerifyPhoneActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("username", username);
-                    bundle.putString("user_email", user_email);
-                    //bundle.putString("user_mobile",user_mobile);
-                    bundle.putString("user_number", number);
-                    bundle.putString("password",password);
-                    intent.putExtras(bundle);
 
-                    startActivity(intent);
-                }
+//                if (number.isEmpty() || number.length() < 13) {
+//                    Toast.makeText(registration.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Intent intent = new Intent(registration.this, VerifyPhoneActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("username", username);
+//                    bundle.putString("user_email", user_email);
+//                    //bundle.putString("user_mobile",user_mobile);
+//                    bundle.putString("user_number", number);
+//                    bundle.putString("password",password);
+//                    intent.putExtras(bundle);
+//
+//                    startActivity(intent);
+//                }
+
+
+                mAuth.createUserWithEmailAndPassword(user_email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(registration.this, "User Created", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        } else {
+                            Toast.makeText(registration.this, "Error" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                });
+
             }
         });
         String text = "Already have an Account? Login.";

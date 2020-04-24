@@ -17,10 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -31,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private View SwitchToRegister;
     FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +48,26 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 if(TextUtils.isEmpty(pass_word)){
-                    email.setError("password.is.empty");
+                    password.setError("password.is.empty");
                     return;
                 }
-                fAuth.signInWithEmailAndPassword(user_email,pass_word).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "login succssfll", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+
+                if (user_email.isEmpty() || pass_word.length() < 13) {
+                    Toast.makeText(LoginActivity.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(LoginActivity.this, VerifyPhoneActivity.class);
+                    Bundle bundle = new Bundle();
+                    intent.putExtra("mobile", user_email);
+
+                    startActivity(intent);
+                }
+
+
+
+
+
+
+
             }
         });
         TextView SwitchToRegister = findViewById(R.id.switchToRegister);
