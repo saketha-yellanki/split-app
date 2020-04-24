@@ -12,6 +12,33 @@
         android:text="This is user profile"
         android:textAlignment="center" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/current_uid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="24dp"
+        android:textAlignment="center" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/email_not_ver_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Email not verified"
+        android:textAlignment="center"
+        android:visibility="invisible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ver_email_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="24dp"
+        android:background="@color/colorPrimary"
+        android:text="verify email now"
+        android:visibility="invisible" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signout_btn"
         android:layout_width="match_parent"

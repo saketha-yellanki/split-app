@@ -116,6 +116,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             extend(user_email, password);
+                            send_data(username, user_email, user_number);
                             Intent intent = new Intent(VerifyPhoneActivity.this, ProfileActivity.class);
                             //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -190,9 +191,23 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         mAuth.getCurrentUser().linkWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(@NonNull final Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            send_data(username, user_email, user_number);
+                            FirebaseUser fuser = mAuth.getCurrentUser();
+                            fuser.sendEmailVerification()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(VerifyPhoneActivity.this, "Verification Email Has been Sent", Toast.LENGTH_LONG).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(VerifyPhoneActivity.this, "Failed:" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+
                             Toast.makeText(VerifyPhoneActivity.this, "Linked email successfully", Toast.LENGTH_LONG).show();
                         } else {
 
