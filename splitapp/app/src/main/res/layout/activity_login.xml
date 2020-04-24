@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Enter Email"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:inputType="textEmailAddress"
             android:textSize="20sp" />
 

@@ -22,11 +22,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
     TextInputEditText email;
     TextInputEditText password;
     Button login_btn;
+    private FirebaseFirestore db;
     private View SwitchToRegister;
     FirebaseAuth fAuth;
 
@@ -34,13 +36,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        db = FirebaseFirestore.getInstance();
         findViews();
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String user_email = email.getText().toString();
                 String pass_word = password.getText().toString();
-                pass_word = encryption(pass_word);
                 // now compare email and then check corresponding password if it is a match or not
                 if(TextUtils.isEmpty(user_email)){
                     email.setError("Email.is.required");
@@ -89,20 +91,6 @@ public class LoginActivity extends AppCompatActivity {
         email = findViewById(R.id.email_edit);
         password = findViewById(R.id.password);
         login_btn = findViewById(R.id.button);
-    }
-    //do not change the value of this string
-    public static final String ALPHABET = "acegikmoqs";
-    public String encryption(String password){
-        //substitution cipher
-        password = password.toLowerCase();
-        String ciphertext = "";
-        for (int i = 0; i < password.length(); i++)
-        {
-            int charPosition = ALPHABET.indexOf(password.charAt(i));
-            char replaceVal = ALPHABET.charAt(charPosition);
-            ciphertext += replaceVal;
-        }
-        return ciphertext;
     }
 
 }
