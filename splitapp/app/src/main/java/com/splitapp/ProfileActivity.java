@@ -7,16 +7,21 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private TabLayout tablayout;
+    private ViewPager viewPager;
+    private ViewPAgeAdapter adapter;
     MaterialButton signout_btn;
     FirebaseAuth mAuth;
     MaterialTextView mUid;
@@ -33,6 +38,16 @@ public class ProfileActivity extends AppCompatActivity {
         signout_btn = findViewById(R.id.signout_btn);
         verify_txt = findViewById(R.id.email_not_ver_txt);
         verify_btn = findViewById(R.id.ver_email_btn);
+        tablayout = (TabLayout) findViewById(R.id.tablayout_id);
+        viewPager = (ViewPager) findViewById(R.id.ViewPager_id);
+        adapter = new ViewPAgeAdapter(getSupportFragmentManager());
+
+        adapter.AddFragment(new FragmentFriend(),"Friends");
+        adapter.AddFragment(new FragmentGropus(),"Groups");
+        adapter.AddFragment(new FragmentActivity(),"Activity");
+
+        viewPager.setAdapter(adapter);
+        tablayout.setupWithViewPager(viewPager);
 
         mUid.setText("uid: " + f_uid);
         signout_btn.setOnClickListener(new View.OnClickListener() {
