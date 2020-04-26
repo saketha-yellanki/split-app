@@ -44,7 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         adapter.AddFragment(new FragmentFriend(),"Friends");
         adapter.AddFragment(new FragmentGropus(),"Groups");
-        adapter.AddFragment(new FragmentActivity(),"Activity");
+        adapter.AddFragment(new FragmentTransactions(),"Activity");
 
         viewPager.setAdapter(adapter);
         tablayout.setupWithViewPager(viewPager);

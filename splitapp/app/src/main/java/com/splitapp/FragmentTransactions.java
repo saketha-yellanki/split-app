@@ -9,9 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class FragmentActivity extends Fragment {
+public class FragmentTransactions extends Fragment {
     View v;
-    public FragmentActivity() {
+    public FragmentTransactions() {
     }
 
     @Nullable
