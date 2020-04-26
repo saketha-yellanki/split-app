@@ -39,8 +39,8 @@ public class FragmentFriend extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         lstContact =new ArrayList<>();
-        lstContact.add(new Friend("frnd1",R.drawable.ic_launcher_foreground));
-        lstContact.add(new Friend("frnd2",R.drawable.ic_launcher_foreground));
+        lstContact.add(new Friend("grp1",R.drawable.ic_launcher_foreground));
+        lstContact.add(new Friend("grp2",R.drawable.ic_launcher_foreground));
 
     }
 }
