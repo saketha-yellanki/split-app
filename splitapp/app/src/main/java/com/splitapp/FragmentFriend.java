@@ -19,7 +19,6 @@ public class FragmentFriend extends Fragment {
     View v;
     private RecyclerView myrecyclerview;
     private List<Friend>lstContact;
-
     public FragmentFriend() {
     }
 
