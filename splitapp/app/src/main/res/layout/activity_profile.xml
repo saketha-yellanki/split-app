@@ -23,11 +23,10 @@
         android:id= "@+id/tablayout_id"
         ></com.google.android.material.tabs.TabLayout>
 
-    <com.google.android.materialviewpager.ViewPager.MaterialViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/ViewPager_id"
         android:layout_width="match_parent"
-        android:layout_height="300dp"></com.google.android.materialviewpager.ViewPager.MaterialViewPager>
-
+        android:layout_height="300dp"></androidx.viewpager.widget.ViewPager>
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/current_uid"
         android:layout_width="match_parent"
