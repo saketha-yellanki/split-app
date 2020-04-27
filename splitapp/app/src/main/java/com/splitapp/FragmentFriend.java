@@ -30,7 +30,7 @@ public class FragmentFriend extends Fragment {
         myrecyclerview=(RecyclerView) v.findViewById(R.id.friends_recyclerview);
         RecyclerViewAdapter recyclerViewAdapter=new RecyclerViewAdapter(getContext(),lstContact);
         myrecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        myrecyclerview.setAdapter(recyclerAdapter);
+        myrecyclerview.setAdapter(recyclerViewAdapter);
         return v;
     }
 
