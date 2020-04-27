@@ -34,7 +34,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         final FirebaseUser this_user = FirebaseAuth.getInstance().getCurrentUser();
         String f_uid = this_user.getUid();
-        mUid = findViewById(R.id.current_uid);
         signout_btn = findViewById(R.id.signout_btn);
         verify_txt = findViewById(R.id.email_not_ver_txt);
         verify_btn = findViewById(R.id.ver_email_btn);
@@ -49,7 +48,6 @@ public class ProfileActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tablayout.setupWithViewPager(viewPager);
 
-        mUid.setText("uid: " + f_uid);
         signout_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

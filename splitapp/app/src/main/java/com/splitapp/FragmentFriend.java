@@ -45,7 +45,7 @@ public class FragmentFriend extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        lstContact.add(new Friend("grp1"));
+        lstContact.add(new Friend("Saketha", "9888888888", "saketha@gmail.com"));
 //        lstContact.add(new Friend("grp2"));
     }
 }
