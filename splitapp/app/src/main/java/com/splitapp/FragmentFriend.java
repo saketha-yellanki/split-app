@@ -40,6 +40,5 @@ public class FragmentFriend extends Fragment {
         lstContact =new ArrayList<>();
         lstContact.add(new Friend("grp1",R.drawable.ic_launcher_foreground));
         lstContact.add(new Friend("grp2",R.drawable.ic_launcher_foreground));
-
     }
 }
