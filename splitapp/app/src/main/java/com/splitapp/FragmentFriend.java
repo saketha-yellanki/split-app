@@ -25,7 +25,6 @@ public class FragmentFriend extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         v = inflater.inflate(R.layout.friends,container,false);
         myrecyclerview=(RecyclerView) v.findViewById(R.id.friends_recyclerview);
         RecyclerViewAdapter recyclerViewAdapter=new RecyclerViewAdapter(getContext(),lstContact);
