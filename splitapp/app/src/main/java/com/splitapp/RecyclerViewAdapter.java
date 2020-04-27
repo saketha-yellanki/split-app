@@ -1,12 +1,9 @@
 package com.splitapp;
 
 import android.content.Context;
-import android.provider.ContactsContract;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,7 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.MyViewHolder holder, int position) {
         holder.tv_name.setText(mData.get(position).getName());
-        holder.img.setImageResource(mData.get(position).getPhoto());
+        //holder.img.setImageResource(mData.get(position).getPhoto());
         
 
     }
@@ -47,13 +44,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         private TextView tv_name;
-        private ImageView img;
+        //private ImageView img;
 
 
         public MyViewHolder(View itemView){
             super(itemView);
             tv_name=(TextView) itemView.findViewById(R.id.name_contact);
-            img=(ImageView) itemView.findViewById(R.id.img_contact);
+            //img=(ImageView) itemView.findViewById(R.id.img_contact);
 
 
         }

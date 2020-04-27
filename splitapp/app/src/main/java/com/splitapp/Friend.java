@@ -1,18 +1,19 @@
 package com.splitapp;
 
 public class Friend {
-    private String Name;
-    private int Photo;
+    private String name;
+    //private int Photo;
 
     public Friend() {
     }
-    public Friend(String Name,int Photo){
+
+    public Friend(String name) {
 
     }
     public String getName(){
-        return Name;
+        return name;
     }
-    public int getPhoto(){
-        return Photo;
-    }
+//    public int getPhoto(){
+//        return Photo;
+//    }
 }

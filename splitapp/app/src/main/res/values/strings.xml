@@ -14,5 +14,6 @@
     <string name="login_cred_req">Enter Email or Password</string>
     <string name="sign_out_confirm">sign out</string>
     <string name="forgot_pass">Forgot your password?</string>
+    <string name="no_frnds">You do not have any friends for now</string>
 
 </resources>
