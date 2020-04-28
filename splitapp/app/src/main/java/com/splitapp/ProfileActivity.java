@@ -1,11 +1,14 @@
 package com.splitapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -25,8 +28,8 @@ public class ProfileActivity extends AppCompatActivity {
     MaterialButton signout_btn;
     FirebaseAuth mAuth;
     MaterialTextView mUid;
-    MaterialTextView verify_txt;
-    MaterialButton verify_btn;
+    AlertDialog.Builder builder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +38,6 @@ public class ProfileActivity extends AppCompatActivity {
         final FirebaseUser this_user = FirebaseAuth.getInstance().getCurrentUser();
         String f_uid = this_user.getUid();
         signout_btn = findViewById(R.id.signout_btn);
-        verify_txt = findViewById(R.id.email_not_ver_txt);
-        verify_btn = findViewById(R.id.ver_email_btn);
         tablayout = (TabLayout) findViewById(R.id.tablayout_id);
         viewPager = (ViewPager) findViewById(R.id.ViewPager_id);
         adapter = new ViewPAgeAdapter(getSupportFragmentManager());
@@ -48,22 +49,21 @@ public class ProfileActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tablayout.setupWithViewPager(viewPager);
 
-        signout_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });
+//        signout_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
+//                startActivity(i);
+//                finish();
+//            }
+//        });
 
         if (!this_user.isEmailVerified()) {
-            verify_txt.setVisibility(View.VISIBLE);
-            verify_btn.setVisibility(View.VISIBLE);
 
-            verify_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            builder = new AlertDialog.Builder(this);
+            builder.setMessage("Please click here to verify you're email id").setTitle("Email Not Verified")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
                     this_user.sendEmailVerification()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -78,9 +78,25 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
                             });
                 }
-            });
+                    }).setNegativeButton(android.R.string.no, null).show();
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_sign_out) {
+            // do something
+            Intent i = new Intent(ProfileActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
