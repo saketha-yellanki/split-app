@@ -20,7 +20,7 @@ public class FragmentFriend extends Fragment {
     View v;
     MaterialTextView no_friends_txt;
     private RecyclerView myrecyclerview;
-    private List<Friend>lstContact;
+    private List<Friend> lstContact;
     public FragmentFriend() {
     }
 
