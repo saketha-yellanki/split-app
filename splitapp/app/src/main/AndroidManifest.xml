@@ -11,10 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Bridge">
-        <activity android:name=".registration"></activity>
+        <activity android:name=".CreateGroup">
+        </activity>
+        <activity android:name=".registration" />
         <activity android:name=".VerifyPhoneActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity">
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

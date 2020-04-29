@@ -15,5 +15,8 @@
     <string name="sign_out_confirm">sign out</string>
     <string name="forgot_pass">Forgot your password?</string>
     <string name="no_frnds">You do not have any friends for now</string>
+    <string name="create_group">Create a group</string>
+    <string name="grp_title">Enter group title</string>
+    <string name="grp_des">Enter group description</string>
 
 </resources>
