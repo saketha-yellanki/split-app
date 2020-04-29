@@ -1,14 +1,14 @@
 package com.splitapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,7 +41,7 @@ public class CreateGroup extends AppCompatActivity {
         actionBar.setTitle("Create Group");
 
         grpTitle=findViewById(R.id.title_edit);
-        grpDescription=findViewById(R.id.grp_des_text);
+        grpDescription = findViewById(R.id.grp_des_edit);
         createGroupBtn=findViewById(R.id.create_grp_btn);
 
         db = FirebaseFirestore.getInstance();
