@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="50dp"
-    tools:context=".registration">
+    tools:context=".activities.registration">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/reg_text"
