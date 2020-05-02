@@ -26,6 +26,8 @@ public class AddFriend extends AppCompatActivity {
     private ActionBar actionBar;
     private FirebaseAuth firebaseAuth;
     private TextInputEditText email;
+    private TextInputEditText name;
+    private TextInputEditText mobile;
     private FloatingActionButton AddFriendBtn;
     private ProgressDialog progressDialog;
     private FirebaseFirestore db;
@@ -41,11 +43,12 @@ public class AddFriend extends AppCompatActivity {
         actionBar.setTitle("Create Group");
 
         email = findViewById(R.id.email_edit);
+        name = findViewById(R.id.name_edit);
+        mobile = findViewById(R.id.phone_edit);
         AddFriendBtn = findViewById(R.id.add_frnd_btn);
 
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        checkUser();
 
         AddFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,16 +60,8 @@ public class AddFriend extends AppCompatActivity {
     }
 
     private void startAddingFrnd() {
-       //sending code to fried and once friend accet it add it into database with amount 0;
+       //sending code to friend and once friend accept it add it into database with amount 0;
 
-    }
-
-
-    private void checkUser() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-            actionBar.setSubtitle(user.getEmail());
-        }
     }
 
     @Override

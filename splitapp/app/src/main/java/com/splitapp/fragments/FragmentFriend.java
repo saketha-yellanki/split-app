@@ -49,7 +49,7 @@ public class FragmentFriend extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.friends, container, false);
-
+        myrecyclerview = v.findViewById(R.id.friends_recyclerview);
         firebaseAuth = FirebaseAuth.getInstance();
 
         friendLists = new ArrayList<ModelFriendList>();

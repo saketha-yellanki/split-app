@@ -15,28 +15,28 @@ import com.splitapp.models.ModelFriendList;
 
 import java.util.List;
 
-public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.HolderGroupsList> {
+public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.HolderFriendList> {
 
     private Context context;
-    private List<ModelFriendList> groupsList;
+    private List<ModelFriendList> FriendList;
 
-    public AdapterFriendList(Context context, List<ModelFriendList> groupsList) {
+    public AdapterFriendList(Context context, List<ModelFriendList> friendList) {
         this.context = context;
-        this.groupsList = groupsList;
+        this.FriendList = friendList;
     }
 
     @NonNull
     @Override
-    public HolderGroupsList onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.row_groups_list, parent, false);
+    public HolderFriendList onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_frnds, parent, false);
 
-        return new HolderGroupsList(view);
+        return new HolderFriendList(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HolderGroupsList holder, int position) {
+    public void onBindViewHolder(@NonNull HolderFriendList holder, int position) {
 
-        ModelFriendList model = groupsList.get(position);
+        ModelFriendList model = FriendList.get(position);
       //  String groupId = model.getGroupId();
         //String groupTitle = model.getGroupTitle();
         //String groupDescription = model.getGroupDescription();
@@ -56,19 +56,19 @@ public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.Ho
 
     @Override
     public int getItemCount() {
-        return groupsList.size();
+        return FriendList.size();
     }
 
-    class HolderGroupsList extends RecyclerView.ViewHolder {
+    class HolderFriendList extends RecyclerView.ViewHolder {
 
-        private MaterialTextView groupTitleTv;
-        private MaterialTextView groupDescriptionTv;
+        private MaterialTextView Friend_name;
+        private MaterialTextView Transaction_amount;
 
-        public HolderGroupsList(@NonNull View itemView) {
+        public HolderFriendList(@NonNull View itemView) {
             super(itemView);
 
-            groupTitleTv = itemView.findViewById(R.id.groupTitleTv);
-            groupDescriptionTv = itemView.findViewById(R.id.descriptionTv);
+            Friend_name = itemView.findViewById(R.id.name_contact);
+            Transaction_amount = itemView.findViewById(R.id.friend_transaction);
 
 
         }
