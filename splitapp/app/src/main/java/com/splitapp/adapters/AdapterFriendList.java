@@ -1,3 +1,4 @@
+// changes has to be made
 package com.splitapp.adapters;
 
 import android.content.Context;
@@ -10,16 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textview.MaterialTextView;
 import com.splitapp.R;
-import com.splitapp.models.ModelGroupsList;
+import com.splitapp.models.ModelFriendList;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class AdapterGroupsList extends RecyclerView.Adapter<AdapterGroupsList.HolderGroupsList> {
+public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.HolderGroupsList> {
 
     private Context context;
-    private ArrayList<ModelGroupsList> groupsList;
+    private List<ModelFriendList> groupsList;
 
-    public AdapterGroupsList(Context context, ArrayList<ModelGroupsList> groupsList) {
+    public AdapterFriendList(Context context, List<ModelFriendList> groupsList) {
         this.context = context;
         this.groupsList = groupsList;
     }
@@ -35,13 +36,13 @@ public class AdapterGroupsList extends RecyclerView.Adapter<AdapterGroupsList.Ho
     @Override
     public void onBindViewHolder(@NonNull HolderGroupsList holder, int position) {
 
-        ModelGroupsList model = groupsList.get(position);
-        String groupId = model.getGroupId();
-        String groupTitle = model.getGroupTitle();
-        String groupDescription = model.getGroupDescription();
+        ModelFriendList model = groupsList.get(position);
+      //  String groupId = model.getGroupId();
+        //String groupTitle = model.getGroupTitle();
+        //String groupDescription = model.getGroupDescription();
 
-        holder.groupTitleTv.setText(groupTitle);
-        holder.groupDescriptionTv.setText(groupDescription);
+      //  holder.groupTitleTv.setText(groupTitle);
+       // holder.groupDescriptionTv.setText(groupDescription);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -15,18 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.splitapp.R;
-import com.splitapp.models.Friend;
+import com.splitapp.models.ModelFriendList;
 
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
     View v;
     Context mContext;
-    List<Friend> mData;
+    List<ModelFriendList> mData;
     Dialog myDialog;
     private Object View;
 
-    public RecyclerViewAdapter(Context mContext, List<Friend> mData) {
+    public RecyclerViewAdapter(Context mContext, List<ModelFriendList> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }

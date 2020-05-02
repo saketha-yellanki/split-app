@@ -1,16 +1,16 @@
 package com.splitapp.models;
 
-public class Friend {
+public class ModelFriendList {
     private String name;
-    private String phone;
+  //  private String phone;
     private String email;
 
-    public Friend() {
+    public ModelFriendList() {
     }
 
-    public Friend(String name, String phone, String email) {
+    public ModelFriendList(String name, String phone, String email) {
         this.name = name;
-        this.phone = phone;
+      //  this.phone = phone;
         this.email = email;
     }
 
@@ -22,13 +22,13 @@ public class Friend {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
-    }
+  //  public String getPhone() {
+    //    return phone;
+  //  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  //  public void setPhone(String phone) {
+     //   this.phone = phone;
+  //  }
 
     public String getEmail() {
         return email;

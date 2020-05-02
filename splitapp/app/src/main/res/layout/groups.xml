@@ -22,15 +22,11 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="4dp"
             android:layout_gravity="end|bottom"
             android:layout_margin="32dp"
             android:src="@drawable/ic_group_add_black_24dp"
             app:backgroundTint="#009688" />
-
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
 </LinearLayout>

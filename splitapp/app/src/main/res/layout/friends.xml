@@ -1,21 +1,36 @@
+<!-- which will display the details of the current frnds using recyclerview
+ and has a option to add frnd -->
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/friends_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/friends_recyclerview">
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_frnds">
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/noFriends_txt"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/no_frnds"
-        android:visibility="visible" />
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="10dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="32dp"
+            android:src="@drawable/ic_group_add_black_24dp"
+            app:backgroundTint="#009688" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>
