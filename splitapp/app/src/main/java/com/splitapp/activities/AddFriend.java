@@ -37,6 +37,7 @@ public class AddFriend extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends);
 
+
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
@@ -49,6 +50,8 @@ public class AddFriend extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+        checkUser();
+
 
         AddFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +65,91 @@ public class AddFriend extends AppCompatActivity {
     private void startAddingFrnd() {
        //sending code to friend and once friend accept it add it into database with amount 0;
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Sending Request");
+
+        String friendEmail = email.getText().toString().trim();
+        String friendName = name.getText().toString().trim();
+        String friendPhone = mobile.getText().toString().trim();
+
+
+        if (TextUtils.isEmpty(friendEmail)) {
+            Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (friendPhone.isEmpty() || friendPhone.length() < 13) {
+            Toast.makeText( AddFriend.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
+        progressDialog.show();
+
+        final String g_timestamp = "" + System.currentTimeMillis();
+        final String friendNamest=""+friendName;
+        final String friendEmailst=""+friendEmail;
+        final String friendPhonest=""+friendPhone;
+
+        addFriend("" + g_timestamp);
+
+        // friend Collection document
+        FirebaseUser f_user = FirebaseAuth.getInstance().getCurrentUser();
+
+        final String uid = f_user.getUid();
+        HashMap<String, String> hashMap1 = new HashMap<>();
+        hashMap1.put("friendName",friendNamest);
+        hashMap1.put("friendEmail",friendEmailst);
+        hashMap1.put("friendPhone",friendPhonest);
+
+        hashMap1.put("transactionAmount","0");
+        db.collection("users").document(uid).collection("Friends").document().set(hashMap1)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        HashMap<String, String> hashMap1 = new HashMap<>();
+
+
+                        db.collection("users").document(uid).collection("Friends").document(firebaseAuth.getUid()).set(hashMap1)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(AddFriend.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(AddFriend.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
+
+    private void addFriend(String g_timestamp) {
+
+    }
+
+    private void checkUser() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            actionBar.setSubtitle(user.getEmail());
+        }
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
