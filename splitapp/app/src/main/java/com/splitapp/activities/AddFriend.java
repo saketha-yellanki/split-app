@@ -1,4 +1,3 @@
-//main folder where we read the frnd email and after acepting adding it to database;
 package com.splitapp.activities;
 
 import android.app.ProgressDialog;

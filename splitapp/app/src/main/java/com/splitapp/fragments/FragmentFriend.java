@@ -35,7 +35,6 @@ import java.util.List;
 
 public class FragmentFriend extends Fragment {
     View v;
-   // MaterialTextView no_friends_txt;
    FloatingActionButton actionButton;
     private RecyclerView myrecyclerview;
     private List<ModelFriendList> friendLists;
@@ -72,10 +71,10 @@ public class FragmentFriend extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        //Log.d("SUCCESS", document.getId() + " => " + document.getData());
                         final String f_id = document.getId();
                         final String f_name = document.get("Friend").toString();
                         final String f_amt = document.get("Amount").toString();
+                        final String f_phone = document.get("phone").toString();
                         rootRef.document(document.getId()).collection("Participants").get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
@@ -84,7 +83,7 @@ public class FragmentFriend extends Fragment {
                                             for (QueryDocumentSnapshot document1 : task.getResult()) {
                                                 if (document1.getId().equals(firebaseAuth.getUid())) {
                                                     Log.d("SUCCESS", "User Exists in group");
-                                                    ModelFriendList model = new ModelFriendList(f_id, f_name, f_name);
+                                                    ModelFriendList model = new ModelFriendList(f_id, f_name, f_phone);
                                                     friendLists.add(model);
                                                     adapterFriendList = new AdapterFriendList(getActivity(), friendLists);
                                                     myrecyclerview.setAdapter(adapterFriendList);
@@ -99,10 +98,6 @@ public class FragmentFriend extends Fragment {
                                     }
                                 });
                     }
-                    //adapterGroupsList = new AdapterGroupsList(getActivity(), groupsLists);
-                    Log.d("Count of list", " " + friendLists.size());
-//                    adapterGroupsList = new AdapterGroupsList(getActivity(), groupsLists);
-//                    groupsRv.setAdapter(adapterGroupsList);
                 } else {
                     Log.d("FAILED", "Error getting documents: ", task.getException());
                 }
