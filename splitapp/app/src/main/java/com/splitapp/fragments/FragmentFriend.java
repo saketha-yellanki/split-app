@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.splitapp.R;
+import com.splitapp.activities.AddFriend;
 import com.splitapp.activities.CreateGroup;
 import com.splitapp.adapters.AdapterFriendList;
 import com.splitapp.adapters.AdapterGroupsList;
@@ -117,7 +118,7 @@ public class FragmentFriend extends Fragment {
                                 dlg.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Intent myIntent = new Intent(getActivity(), CreateGroup.class);
+                                        Intent myIntent = new Intent(getActivity(), AddFriend.class);
                                         startActivity(myIntent);
                                         dialog.dismiss();
                                     }
