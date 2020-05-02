@@ -30,7 +30,7 @@ import com.splitapp.models.ModelGroupsList;
 
 import java.util.ArrayList;
 
-public class FragmentGropus extends Fragment {
+public class FragmentGroups extends Fragment {
     View v;
     FloatingActionButton actionButton;
     private RecyclerView groupsRv;
@@ -39,7 +39,7 @@ public class FragmentGropus extends Fragment {
 
     private FirebaseAuth firebaseAuth;
 
-    public FragmentGropus() {
+    public FragmentGroups() {
     }
 
 

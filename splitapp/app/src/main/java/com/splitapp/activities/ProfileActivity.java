@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.splitapp.R;
 import com.splitapp.adapters.ViewPAgeAdapter;
 import com.splitapp.fragments.FragmentFriend;
-import com.splitapp.fragments.FragmentGropus;
+import com.splitapp.fragments.FragmentGroups;
 import com.splitapp.fragments.FragmentTransactions;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -48,7 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
         adapter = new ViewPAgeAdapter(getSupportFragmentManager());
 
         adapter.AddFragment(new FragmentFriend(), "Friends");
-        adapter.AddFragment(new FragmentGropus(), "Groups");
+        adapter.AddFragment(new FragmentGroups(), "Groups");
         adapter.AddFragment(new FragmentTransactions(), "Activity");
 
         viewPager.setAdapter(adapter);

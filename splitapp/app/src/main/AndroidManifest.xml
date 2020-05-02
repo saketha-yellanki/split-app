@@ -13,6 +13,8 @@
         android:theme="@style/Theme.MaterialComponents.Bridge">
         <activity android:name=".activities.CreateGroup">
         </activity>
+        <activity android:name=".activities.AddFriend" />
+
         <activity android:name=".activities.registration" />
         <activity android:name=".activities.VerifyPhoneActivity" />
         <activity android:name=".activities.ProfileActivity" />
