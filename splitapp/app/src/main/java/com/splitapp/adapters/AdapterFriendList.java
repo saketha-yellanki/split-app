@@ -43,7 +43,7 @@ public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.Ho
         //String groupDescription = model.getGroupDescription();
 
       holder.Friend_name.setText(friendname);
-        holder.Transaction_amount.setText(transactionAmount);
+//        holder.Transaction_amount.setText(transactionAmount);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

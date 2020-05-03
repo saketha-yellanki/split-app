@@ -107,25 +107,11 @@ public class AddFriend extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-
+                        progressDialog.dismiss();
+                        Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
                         HashMap<String, String> hashMap1 = new HashMap<>();
 
 
-                        db.collection("users").document(uid).collection("Friends").document(firebaseAuth.getUid()).set(hashMap1)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(AddFriend.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
 
                     }
                 })
