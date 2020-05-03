@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,8 +62,8 @@ public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.Ho
 
     class HolderFriendList extends RecyclerView.ViewHolder {
 
-        private MaterialTextView Friend_name;
-        private MaterialTextView Transaction_amount;
+        private TextView Friend_name;
+        private TextView Transaction_amount;
 
         public HolderFriendList(@NonNull View itemView) {
             super(itemView);
