@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,7 +41,7 @@ public class FragmentFriend extends Fragment {
     private RecyclerView myrecyclerview;
     private ArrayList<ModelFriendList> friendLists;
     private AdapterFriendList adapterFriendList;
-
+    private Button Expenses;
     private FirebaseAuth firebaseAuth;
 
     public FragmentFriend() {
