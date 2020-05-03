@@ -41,7 +41,7 @@ public class AddFriend extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setTitle("Create Group");
+        actionBar.setTitle("Add Friend");
 
         email = findViewById(R.id.email_edit);
         name = findViewById(R.id.name_edit);

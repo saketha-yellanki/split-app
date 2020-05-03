@@ -1,4 +1,3 @@
-// changes has to be made
 package com.splitapp.adapters;
 
 import android.content.Context;
@@ -13,14 +12,15 @@ import com.google.android.material.textview.MaterialTextView;
 import com.splitapp.R;
 import com.splitapp.models.ModelFriendList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.HolderFriendList> {
 
     private Context context;
-    private List<ModelFriendList> FriendList;
+    private ArrayList<ModelFriendList> FriendList;
 
-    public AdapterFriendList(Context context, List<ModelFriendList> friendList) {
+    public AdapterFriendList(Context context, ArrayList<ModelFriendList> friendList) {
         this.context = context;
         this.FriendList = friendList;
     }
@@ -37,12 +37,12 @@ public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.Ho
     public void onBindViewHolder(@NonNull HolderFriendList holder, int position) {
 
         ModelFriendList model = FriendList.get(position);
-      //  String groupId = model.getGroupId();
-        //String groupTitle = model.getGroupTitle();
+        String friendname = model.getName();
+        int transactionAmount = model.getAmount();
         //String groupDescription = model.getGroupDescription();
 
-      //  holder.groupTitleTv.setText(groupTitle);
-       // holder.groupDescriptionTv.setText(groupDescription);
+      holder.Friend_name.setText(friendname);
+        holder.Transaction_amount.setText(transactionAmount);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

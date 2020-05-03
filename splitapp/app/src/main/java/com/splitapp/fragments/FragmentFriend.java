@@ -38,7 +38,7 @@ public class FragmentFriend extends Fragment {
     View v;
    FloatingActionButton actionButton;
     private RecyclerView myrecyclerview;
-    private List<ModelFriendList> friendLists;
+    private ArrayList<ModelFriendList> friendLists;
     private AdapterFriendList adapterFriendList;
 
     private FirebaseAuth firebaseAuth;
@@ -66,35 +66,35 @@ public class FragmentFriend extends Fragment {
     private void loadFriendList() {
 
         String user_id = firebaseAuth.getUid();
-        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Friends");
+        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Users");
         rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         final String f_id = document.getId();
-                        final String f_name = document.get("Friend").toString();
-                        final String f_amt = document.get("Amount").toString();
-                        final String f_phone = document.get("phone").toString();
-                        rootRef.document(document.getId()).collection("Participants").get()
+                        final String f_name = document.get("friendemail").toString();
+                        final String f_amt = document.get("transactionAmount").toString();
+                        final String f_phone = document.get("friendphone").toString();
+                        rootRef.document(document.getId()).collection("Friends").get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document1 : task.getResult()) {
                                                 if (document1.getId().equals(firebaseAuth.getUid())) {
-                                                    Log.d("SUCCESS", "User Exists in group");
+                                                    Log.d("SUCCESS", "Friend Exists");
                                                     ModelFriendList model = new ModelFriendList(f_id, f_name, f_phone);
                                                     friendLists.add(model);
                                                     adapterFriendList = new AdapterFriendList(getActivity(), friendLists);
                                                     myrecyclerview.setAdapter(adapterFriendList);
                                                     Log.d("Count of list UP", " " + friendLists.size());
                                                 } else {
-                                                    Log.d("FAILED", "User Does Not Exist in group");
+                                                    Log.d("FAILED", "Add Friend");
                                                 }
                                             }
                                         } else {
-                                            Log.d("FAILED", "Error getting documents from participants: ", task.getException());
+                                            Log.d("FAILED", "Error getting documents from Friends: ", task.getException());
                                         }
                                     }
                                 });
