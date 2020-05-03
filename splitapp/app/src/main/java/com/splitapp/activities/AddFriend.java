@@ -57,8 +57,8 @@ public class AddFriend extends AppCompatActivity {
         AddFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  startAddingFrnd();
-                final String friend_name = name.getText().toString();
+              startAddingFrnd();
+            /*    final String friend_name = name.getText().toString();
                 final String friend_email = email.getText().toString();
                 final String number = "+91 " + mobile.getText().toString();
                 Intent intent = new Intent(AddFriend.this, AcceptRequest.class);
@@ -68,7 +68,7 @@ public class AddFriend extends AppCompatActivity {
                 bundle.putString("friendnumber", number);
                 intent.putExtras(bundle);
 
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
 
