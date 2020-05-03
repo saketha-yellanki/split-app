@@ -66,23 +66,24 @@ public class FragmentFriend extends Fragment {
     private void loadFriendList() {
 
         String user_id = firebaseAuth.getUid();
-        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Users");
+        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users")
+                .document(user_id).collection("Friends");
         rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+                    for (final QueryDocumentSnapshot document : task.getResult()) {
                         final String f_id = document.getId();
-                        final String f_name = document.get("friendemail").toString();
+                        final String f_name = document.get("friendName").toString();
                         final String f_amt = document.get("transactionAmount").toString();
-                        final String f_phone = document.get("friendphone").toString();
-                        rootRef.document(document.getId()).collection("Friends").get()
+                        final String f_phone = document.get("friendPhone").toString();
+                        rootRef.get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document1 : task.getResult()) {
-                                                if (document1.getId().equals(firebaseAuth.getUid())) {
+                                                if (document1.getId().equals(document.getId())) {
                                                     Log.d("SUCCESS", "Friend Exists");
                                                     ModelFriendList model = new ModelFriendList(f_id, f_name, f_phone);
                                                     friendLists.add(model);
