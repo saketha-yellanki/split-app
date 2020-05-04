@@ -15,6 +15,7 @@
         </activity>
         <activity android:name=".activities.AddFriend" />
         <activity android:name=".activities.GroupMainActivity" />
+        <activity android:name=".activities.GroupParticipantAddActivity" />
         <activity android:name=".activities.AcceptRequest" />
         <activity android:name=".activities.registration" />
         <activity android:name=".activities.VerifyPhoneActivity" />
@@ -24,7 +25,7 @@
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-    d
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -7,6 +7,12 @@
     android:layout_gravity="bottom"
     android:orientation="vertical">
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="10dp">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/groupRv"
         android:layout_width="match_parent"
@@ -14,11 +20,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/row_groups_list" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="10dp">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_btn"

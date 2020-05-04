@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,20 +39,20 @@ public class AdapterGroupsList extends RecyclerView.Adapter<AdapterGroupsList.Ho
     @Override
     public void onBindViewHolder(@NonNull HolderGroupsList holder, int position) {
 
-        ModelGroupsList model = groupsList.get(position);
+        final ModelGroupsList model = groupsList.get(position);
         String groupId = model.getGroupId();
         String groupTitle = model.getGroupTitle();
         String groupDescription = model.getGroupDescription();
 
         holder.groupTitleTv.setText(groupTitle);
         holder.groupDescriptionTv.setText(groupDescription);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.relative_grp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //meghana -- for you
-                Intent i=new Intent(context, GroupMainActivity.class);
-                context.startActivity(i);
+                Intent intent=new Intent(context, GroupMainActivity.class);
+                intent.putExtra("groupTitle",model.getGroupTitle());
+                context.startActivity(intent);
 
             }
         });
@@ -68,12 +69,14 @@ public class AdapterGroupsList extends RecyclerView.Adapter<AdapterGroupsList.Ho
 
         private MaterialTextView groupTitleTv;
         private MaterialTextView groupDescriptionTv;
+        private RelativeLayout relative_grp;
 
         public HolderGroupsList(@NonNull View itemView) {
             super(itemView);
 
             groupTitleTv = itemView.findViewById(R.id.groupTitleTv);
             groupDescriptionTv = itemView.findViewById(R.id.descriptionTv);
+            relative_grp=itemView.findViewById(R.id.relative_row_groups_list);
 
 
         }

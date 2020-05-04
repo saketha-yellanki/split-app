@@ -1,37 +1,77 @@
 package com.splitapp.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toolbar;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.splitapp.R;
 
 public class GroupMainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private String groupId,myGroupRole="";
+    private ActionBar actionBar;
+    private FloatingActionButton AddFriendBtnGrp;
 
-    Toolbar toolbar;
+
+
+    //Toolbar toolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_main);
-        toolbar=findViewById(R.id.toolbar1);
+
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setTitle(getIntent().getStringExtra("groupTitle"));
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        checkUser();
+
+        AddFriendBtnGrp = findViewById(R.id.fab_btn_group_main);
+
+        AddFriendBtnGrp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(GroupMainActivity.this,GroupParticipantAddActivity.class);
+                intent.putExtra("groupId",groupId);
+                startActivity(intent);
+
+            }
+        });
+        /*toolbar=findViewById(R.id.toolbar1);
 
         setSupportActionBar(toolbar);
 
         Intent intent=getIntent();
-        groupId=intent.getStringExtra("groupId");
+        groupId=intent.getStringExtra("groupId");*/
+    }
+    private void checkUser() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            actionBar.setSubtitle(user.getEmail());
+        }
     }
 
-    private void setSupportActionBar(Toolbar toolbar) {
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
+    }
+
+    /*private void setSupportActionBar(Toolbar toolbar) {
     }
 
     @Override
@@ -57,5 +97,5 @@ public class GroupMainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }

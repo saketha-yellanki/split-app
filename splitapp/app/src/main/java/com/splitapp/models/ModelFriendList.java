@@ -7,7 +7,7 @@ public class ModelFriendList {
     private int amount;
     private String uid;
 
-    public ModelFriendList(String name,String email,String Phone,String uid) {
+    public ModelFriendList(String name,String email,String Phone,String uid,String amount) {
         this.name = name;
         this.email = email;
         this.amount =0;
