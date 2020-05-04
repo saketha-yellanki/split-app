@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/friend_item_id"
-    android:padding="5dp">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="1dp"
+    app:cardBackgroundColor="@color/cardview_dark_background"
+    app:contentPadding="12dp">
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="16dp"
-        tools:ignore="MissingConstraints">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="Friend name"
-            android:id="@+id/name_contact"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/friend_transaction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="transaction amount" />
-</LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/name_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="Friend Name"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp" />
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/friend_transaction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/groupTitleTv"
+                    android:layout_marginStart="200dp"
+                    android:layout_marginLeft="8dp"
+                    android:maxLines="1"
+                    android:text="Transaction Amount" />
+
+        </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

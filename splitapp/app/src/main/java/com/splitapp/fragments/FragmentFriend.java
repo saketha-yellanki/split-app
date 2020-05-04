@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,11 +37,11 @@ import java.util.List;
 
 public class FragmentFriend extends Fragment {
     View v;
-   FloatingActionButton actionButton;
+    FloatingActionButton actionButton;
     private RecyclerView myrecyclerview;
     private ArrayList<ModelFriendList> friendLists;
     private AdapterFriendList adapterFriendList;
-
+    private Button Expenses;
     private FirebaseAuth firebaseAuth;
 
     public FragmentFriend() {
@@ -66,38 +67,30 @@ public class FragmentFriend extends Fragment {
     private void loadFriendList() {
 
         String user_id = firebaseAuth.getUid();
-        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Users");
+        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Users").document(user_id).collection("Friends");
         rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+                    System.out.println("Query Snapshot gotten");
+                    for ( QueryDocumentSnapshot document : task.getResult()) {
+                        System.out.println("Result gotten");
                         final String f_id = document.getId();
-                        final String f_name = document.get("friendemail").toString();
+                        final String f_name = document.get("friendEmail").toString();
+
                         final String f_amt = document.get("transactionAmount").toString();
-                        final String f_phone = document.get("friendphone").toString();
-                        rootRef.document(document.getId()).collection("Friends").get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document1 : task.getResult()) {
-                                                if (document1.getId().equals(firebaseAuth.getUid())) {
-                                                    Log.d("SUCCESS", "Friend Exists");
-                                                    ModelFriendList model = new ModelFriendList(f_id, f_name, f_phone,firebaseAuth.getUid());
-                                                    friendLists.add(model);
-                                                    adapterFriendList = new AdapterFriendList(getActivity(), friendLists);
-                                                    myrecyclerview.setAdapter(adapterFriendList);
-                                                    Log.d("Count of list UP", " " + friendLists.size());
-                                                } else {
-                                                    Log.d("FAILED", "Add Friend");
-                                                }
-                                            }
-                                        } else {
-                                            Log.d("FAILED", "Error getting documents from Friends: ", task.getException());
-                                        }
-                                    }
-                                });
+                        final String f_phone = document.get("friendPhone").toString();
+                        ModelFriendList model = new ModelFriendList(f_name, f_name, f_phone,firebaseAuth.getUid());
+                        System.out.println(f_id);
+                        System.out.println(f_name);
+                        System.out.println(f_phone);
+
+                        friendLists.add(model);
+
+                        adapterFriendList = new AdapterFriendList(getActivity(), friendLists);
+
+                        myrecyclerview.setAdapter(adapterFriendList);
+
                     }
                 } else {
                     Log.d("FAILED", "Error getting documents: ", task.getException());

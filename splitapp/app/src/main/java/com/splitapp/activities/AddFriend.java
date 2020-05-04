@@ -1,6 +1,7 @@
 package com.splitapp.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -56,7 +57,18 @@ public class AddFriend extends AppCompatActivity {
         AddFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startAddingFrnd();
+              startAddingFrnd();
+            /*    final String friend_name = name.getText().toString();
+                final String friend_email = email.getText().toString();
+                final String number = "+91 " + mobile.getText().toString();
+                Intent intent = new Intent(AddFriend.this, AcceptRequest.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("friendname", friend_name);
+                bundle.putString("friendemail", friend_email);
+                bundle.putString("friendnumber", number);
+                intent.putExtras(bundle);
+
+                startActivity(intent);*/
             }
         });
 
@@ -108,25 +120,11 @@ public class AddFriend extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-
+                        progressDialog.dismiss();
+                        Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
                         HashMap<String, String> hashMap1 = new HashMap<>();
 
 
-                        db.collection("users").document(uid).collection("Friends").document(firebaseAuth.getUid()).set(hashMap1)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(AddFriend.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
 
                     }
                 })
