@@ -84,7 +84,7 @@ public class FragmentFriend extends Fragment {
                                             for (QueryDocumentSnapshot document1 : task.getResult()) {
                                                 if (document1.getId().equals(firebaseAuth.getUid())) {
                                                     Log.d("SUCCESS", "Friend Exists");
-                                                    ModelFriendList model = new ModelFriendList(f_id, f_name, f_phone);
+                                                    ModelFriendList model = new ModelFriendList(f_id, f_name, f_phone,firebaseAuth.getUid());
                                                     friendLists.add(model);
                                                     adapterFriendList = new AdapterFriendList(getActivity(), friendLists);
                                                     myrecyclerview.setAdapter(adapterFriendList);

@@ -101,6 +101,7 @@ public class AddFriend extends AppCompatActivity {
         hashMap1.put("friendName",friendNamest);
         hashMap1.put("friendEmail",friendEmailst);
         hashMap1.put("friendPhone",friendPhonest);
+        hashMap1.put("friendId",firebaseAuth.getUid());
 
         hashMap1.put("transactionAmount","0");
         db.collection("users").document(uid).collection("Friends").document().set(hashMap1)

@@ -5,12 +5,14 @@ public class ModelFriendList {
     private String phone;
     private String email;
     private int amount;
+    private String uid;
 
-    public ModelFriendList(String name,String email,String Phone) {
+    public ModelFriendList(String name,String email,String Phone,String uid) {
         this.name = name;
         this.email = email;
         this.amount =0;
         this.phone = phone;
+        this.uid=uid;
     }
 
     public String getName() {
@@ -44,6 +46,11 @@ public class ModelFriendList {
     public int getAmount() {
         return this.amount;
     }
+
+    public String getUid(){ return uid; }
+
+    public void setUid(String uid){this.uid=uid; }
+
 
     //private int Photo;
 

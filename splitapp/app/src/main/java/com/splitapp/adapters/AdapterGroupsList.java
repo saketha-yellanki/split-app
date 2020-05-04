@@ -1,6 +1,7 @@
 package com.splitapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textview.MaterialTextView;
 import com.splitapp.R;
+import com.splitapp.activities.GroupMainActivity;
 import com.splitapp.models.ModelGroupsList;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class AdapterGroupsList extends RecyclerView.Adapter<AdapterGroupsList.Ho
 
     private Context context;
     private ArrayList<ModelGroupsList> groupsList;
+
 
     public AdapterGroupsList(Context context, ArrayList<ModelGroupsList> groupsList) {
         this.context = context;
@@ -47,6 +50,9 @@ public class AdapterGroupsList extends RecyclerView.Adapter<AdapterGroupsList.Ho
             @Override
             public void onClick(View view) {
                 //meghana -- for you
+                Intent i=new Intent(context, GroupMainActivity.class);
+                context.startActivity(i);
+
             }
         });
 

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -78,7 +80,7 @@ public class FragmentGroups extends Fragment {
                         final String g_creator = document.get("createdBy").toString();
                         final String g_time = document.get("timestamp").toString();
                         rootRef.document(document.getId()).collection("Participants").get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                .addOnCompleteListener(    new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()) {
@@ -135,6 +137,10 @@ public class FragmentGroups extends Fragment {
 
     }
 
+    /*@Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
+        super.onCreateOptionsMenu(menu, inflater);
+    }*/
 }
 
