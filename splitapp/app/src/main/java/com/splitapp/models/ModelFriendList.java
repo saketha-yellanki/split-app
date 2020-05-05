@@ -4,13 +4,13 @@ public class ModelFriendList {
     private String name;
     private String phone;
     private String email;
-    private int amount;
+    private String amount;
     private String uid;
 
-    public ModelFriendList(String name,String email,String Phone,String uid,String amount) {
+    public ModelFriendList(String name,String email,String Phone,String uid,int amount) {
         this.name = name;
         this.email = email;
-        this.amount =0;
+        this.amount =Integer.toString(amount);
         this.phone = phone;
         this.uid=uid;
     }
@@ -43,7 +43,7 @@ public class ModelFriendList {
         this.amount = this.amount+num;
     }
 
-    public int getAmount() {
+    public String getAmount() {
         return this.amount;
     }
 

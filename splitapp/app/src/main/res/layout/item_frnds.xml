@@ -23,12 +23,25 @@
                     android:textSize="18sp" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/famount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/name_contact"
+
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:maxLines="1"
+                    android:text="Amount: " />
+
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/friend_transaction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/groupTitleTv"
-                    android:layout_marginStart="200dp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@+id/famount"
+                    android:layout_below="@+id/name_contact"
+
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="100dp"
                     android:maxLines="1"
                     android:text="Transaction Amount" />
 

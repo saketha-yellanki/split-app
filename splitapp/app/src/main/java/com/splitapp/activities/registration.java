@@ -72,7 +72,7 @@ public class registration extends AppCompatActivity {
                 }
 
                 if (!password.equals(conf_pass)) {
-                    Toast.makeText(registration.this, "Pasword Do Not Match", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(registration.this, "Passwords Do Not Match", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

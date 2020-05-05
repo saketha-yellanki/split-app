@@ -39,11 +39,10 @@ public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.Ho
 
         ModelFriendList model = FriendList.get(position);
         String friendname = model.getName();
-        int transactionAmount = model.getAmount();
-        //String groupDescription = model.getGroupDescription();
+        int transactionAmount = Integer.parseInt(model.getAmount());
 
       holder.Friend_name.setText(friendname);
-//        holder.Transaction_amount.setText(transactionAmount);
+        holder.Transaction_amount.setText(Integer.toString(transactionAmount));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

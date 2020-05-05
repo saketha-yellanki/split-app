@@ -3,7 +3,9 @@ package com.splitapp.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,15 +15,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 import com.splitapp.R;
+import com.splitapp.adapters.AdapterFriendList;
 import com.splitapp.fragments.FragmentFriend;
+import com.splitapp.models.ModelFriendList;
 
 import java.util.HashMap;
 
@@ -35,6 +49,11 @@ public class AddFriend extends AppCompatActivity {
     private FloatingActionButton AddFriendBtn;
     private ProgressDialog progressDialog;
     private FirebaseFirestore db;
+    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private boolean userExists=false;
+    private boolean sameUser=false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +72,7 @@ public class AddFriend extends AppCompatActivity {
         AddFriendBtn = findViewById(R.id.add_frnd_btn);
 
         db = FirebaseFirestore.getInstance();
+
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
 
@@ -60,7 +80,7 @@ public class AddFriend extends AppCompatActivity {
         AddFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              startAddingFrnd();
+                startAddingFrnd();
             /*    final String friend_name = name.getText().toString();
                 final String friend_email = email.getText().toString();
                 final String number = "+91 " + mobile.getText().toString();
@@ -78,12 +98,12 @@ public class AddFriend extends AppCompatActivity {
     }
 
     private void startAddingFrnd() {
-       //sending code to friend and once friend accept it add it into database with amount 0;
+        //sending code to friend and once friend accept it add it into database with amount 0;
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Sending Request");
+        progressDialog.setMessage("Adding Friend");
 
-        String friendEmail = email.getText().toString().trim();
+        final String friendEmail = email.getText().toString().trim();
         String friendName = name.getText().toString().trim();
         String friendPhone = mobile.getText().toString().trim();
 
@@ -92,53 +112,88 @@ public class AddFriend extends AppCompatActivity {
             Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (friendPhone.isEmpty() || friendPhone.length() < 13) {
-            Toast.makeText( AddFriend.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
+        if (friendPhone.isEmpty() || friendPhone.length() < 10) {
+            Toast.makeText(AddFriend.this, "Please Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
+            return;
         }
-
-
 
 
         progressDialog.show();
 
         final String g_timestamp = "" + System.currentTimeMillis();
-        final String friendNamest=""+friendName;
-        final String friendEmailst=""+friendEmail;
-        final String friendPhonest=""+friendPhone;
+        final String friendNamest = "" + friendName;
+        final String friendEmailst = "" + friendEmail;
+        final String friendPhonest = "" + friendPhone;
 
         addFriend("" + g_timestamp);
 
+
         // friend Collection document
-        FirebaseUser f_user = FirebaseAuth.getInstance().getCurrentUser();
 
-        final String uid = f_user.getUid();
-        HashMap<String, String> hashMap1 = new HashMap<>();
-        hashMap1.put("friendName",friendNamest);
-        hashMap1.put("friendEmail",friendEmailst);
-        hashMap1.put("friendPhone",friendPhonest);
-        hashMap1.put("friendId",firebaseAuth.getUid());
+        final String uid = user.getUid();
+        final HashMap<String, String> hashMap1 = new HashMap<>();
+        hashMap1.put("friendName", friendNamest);
+        hashMap1.put("friendEmail", friendEmailst);
+        hashMap1.put("friendPhone", friendPhonest);
+        hashMap1.put("transactionAmount", "0");
 
-        hashMap1.put("transactionAmount","0");
-        db.collection("users").document(uid).collection("Friends").document().set(hashMap1)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        progressDialog.dismiss();
-                        Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
-                        reloadFriendFragment();
-                        HashMap<String, String> hashMap1 = new HashMap<>();
+        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users");
+        rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (final QueryDocumentSnapshot document : task.getResult()) {
+                        final String fid = document.getId();
+                        final String email = document.get("user_email").toString();
+                        System.out.println(friendEmailst);
+                        System.out.println(email);
+                        if (friendEmailst.equals(email)) {
+                            userExists=true;
 
+                            System.out.println(friendEmailst);
+                            System.out.println(email);
 
+                            if (friendEmailst.equals(user.getEmail())) {
+                                progressDialog.dismiss();
+                                sameUser=true;
+                                break;
+                            }
+                            db.collection("users").document(uid).collection("Friends").document(fid).set(hashMap1)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
+                                            reloadFriendFragment();
 
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(AddFriend.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            break;
+
+                        }
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+                    if(sameUser) {
                         progressDialog.dismiss();
-                        Toast.makeText(AddFriend.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddFriend.this, "Add a friend", Toast.LENGTH_SHORT).show();
+                        if (!userExists) {
+                            Toast.makeText(AddFriend.this, "No such user", Toast.LENGTH_SHORT).show();
+
+                        }
                     }
-                });
+
+                } else {
+                    Log.d("FAILED", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
 
     }
 
@@ -147,7 +202,6 @@ public class AddFriend extends AppCompatActivity {
     }
 
     private void checkUser() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) {
             actionBar.setSubtitle(user.getEmail());
         }

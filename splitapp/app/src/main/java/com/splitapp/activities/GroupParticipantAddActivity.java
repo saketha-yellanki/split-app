@@ -77,7 +77,7 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
                                                 final String f_id=document1.get("friendId").toString();
                                                 final String f_name = document1.get("friendName").toString();
                                                 final String f_email=document1.get("friendEmail").toString();
-                                                final String f_amt = document1.get("transactionAmount").toString();
+                                                final int f_amt = (int) document1.get("transactionAmount");
                                                 final String f_phone = document1.get("friendPhone").toString();
                                                 ModelFriendList model = new ModelFriendList(f_name,f_email,f_phone,f_id,f_amt);
                                                 if(model.getUid()!=null) {

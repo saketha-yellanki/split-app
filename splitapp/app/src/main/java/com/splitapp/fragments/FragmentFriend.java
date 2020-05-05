@@ -66,6 +66,9 @@ public class FragmentFriend extends Fragment {
     }
     private void loadFriendList() {
 
+
+
+
         String user_id = firebaseAuth.getUid();
         final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users")
                 .document(user_id).collection("Friends");
@@ -75,43 +78,17 @@ public class FragmentFriend extends Fragment {
                 if (task.isSuccessful()) {
                     for (final QueryDocumentSnapshot document : task.getResult()) {
                             final String fr_id = document.getId();
-                            final String f_id=document.get("friendId").toString();
+//                            final String f_id=document.get("friendId").toString();
                             final String f_name = document.get("friendName").toString();
                             final String f_email=document.get("friendEmail").toString();
-                            final String f_amt = document.get("transactionAmount").toString();
+                            final int f_amt = Integer.parseInt((String) document.get("transactionAmount"));
                             final String f_phone = document.get("friendPhone").toString();
-                            rootRef.get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document1 : task.getResult()) {
-                                                    if (document1.getId().equals(document.getId())) {
-                                                        Log.d("SUCCESS", "Friend Exists");
-                                                        ModelFriendList model = new ModelFriendList(f_name,f_email,f_phone,f_id,f_amt);
-                                                        friendLists.add(model);
-                                                        adapterFriendList = new AdapterFriendList(getActivity(), friendLists);
-                                                        myrecyclerview.setAdapter(adapterFriendList);
-                                                        Log.d("Count of list UP", " " + friendLists.size());
-                                                    } else {
-                                                        Log.d("FAILED", "Add Friend");
-                                                    }
-                                                }
-                                            } else {
-                                                Log.d("FAILED", "Error getting documents from Friends: ", task.getException());
-                                            }
-                                        }
-                                    });
-                            /*ModelFriendList model = new ModelFriendList(f_name,f_email,f_phone,f_id,f_amt);
-                            System.out.println(f_id);
-                            System.out.println(f_name);
-                            System.out.println(f_phone);
 
-                            friendLists.add(model);
-
-                            adapterFriendList = new AdapterFriendList(getActivity(), friendLists);
-
-                            myrecyclerview.setAdapter(adapterFriendList);*/
+                        Log.d("SUCCESS", "Friend Exists");
+                        ModelFriendList model = new ModelFriendList(f_name,f_email,f_phone,f_name,f_amt);
+                        friendLists.add(model);
+                        adapterFriendList = new AdapterFriendList(getActivity(), friendLists);
+                        myrecyclerview.setAdapter(adapterFriendList);
 
                         }
                     } else {
