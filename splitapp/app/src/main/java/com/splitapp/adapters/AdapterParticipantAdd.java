@@ -3,9 +3,11 @@ package com.splitapp.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.splitapp.R;
+import com.splitapp.activities.GroupParticipantAddActivity;
 import com.splitapp.models.ModelFriendList;
 
 import java.util.ArrayList;
@@ -51,7 +54,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HolderParticipantAdd holder, int position) {
+    public void onBindViewHolder(@NonNull HolderParticipantAdd holder, final int position) {
         final ModelFriendList modelFriendList=friendsList.get(position);
         String name=modelFriendList.getName();
         String email=modelFriendList.getEmail();
@@ -62,10 +65,13 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
 
         //checkIfAlreadyExists(modelFriendList,holder);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.relative_participants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Groups");
+                  //int pos=position;
+                  Log.d("position", String.valueOf(position)) ;
+                  //final ModelFriendList modelFriendList=friendsList.get(position);
+                /*CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Groups");
                 rootRef.document(groupId).collection("Participants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -88,7 +94,23 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                                     }).show();
                                 }
                                 else{
+
                                 }
+                                AlertDialog.Builder builder=new AlertDialog.Builder(context);
+                                builder.setTitle("Add participant")
+                                        .setMessage("Add this user in this group?")
+                                        .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                addParticipant(modelFriendList);
+                                            }
+                                        })
+                                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
                             }
 
                         }
@@ -110,7 +132,26 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                                         }).show();
                         }
                     }
-                });
+                });*/
+
+                AlertDialog.Builder builder=new AlertDialog.Builder(context);
+                builder.setTitle("Add participant")
+                        .setMessage("Add this user in this group?")
+                        .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.d("position", String.valueOf(position)) ;  
+                                final ModelFriendList modelFriendList=friendsList.get(position);
+                                  Log.d("uid",modelFriendList.getUid());
+                                addParticipant(modelFriendList);
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
 
             }
         });
@@ -123,11 +164,15 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
         hashMap.put("role","participant");
         hashMap.put("timestamp",""+timestamp);
 
-        db.collection("Groups").document(groupId).collection("Participants").document(modelFriendList.getUid()).set(hashMap)
+        Log.d("uid",modelFriendList.getUid());
+        //
+        final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
+        rootRef1.document(groupId).collection("Participants").document(modelFriendList.getUid()).set(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(context,"Added successfully",Toast.LENGTH_SHORT).show();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -139,11 +184,12 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
     }
 
     private void removeParticipant(ModelFriendList modelFriendList) {
-        db.collection("Groups").document(groupId).collection("Participants").document(modelFriendList.getUid()).delete()
+        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Groups");
+        rootRef.document(groupId).collection("Participants").document(modelFriendList.getUid()).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-
+                        Toast.makeText(context,"Participant Removed",Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -178,12 +224,14 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
     class HolderParticipantAdd extends RecyclerView.ViewHolder{
 
         private TextView nameTv,emailTv;
+        private RelativeLayout relative_participants;
 
         public HolderParticipantAdd(@NonNull View itemView) {
             super(itemView);
 
             nameTv=itemView.findViewById(R.id.personNameTv);
             emailTv=itemView.findViewById(R.id.emailTv);
+            relative_participants=itemView.findViewById(R.id.relative_particiant_add);
         }
     }
 }
