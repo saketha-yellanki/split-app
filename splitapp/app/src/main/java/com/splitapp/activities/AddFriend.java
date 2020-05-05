@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.splitapp.R;
+import com.splitapp.fragments.FragmentFriend;
 
 import java.util.HashMap;
 
@@ -122,6 +125,7 @@ public class AddFriend extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         progressDialog.dismiss();
                         Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
+                        reloadFriendFragment();
                         HashMap<String, String> hashMap1 = new HashMap<>();
 
 
@@ -154,5 +158,16 @@ public class AddFriend extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
+    }
+
+    public void reloadFriendFragment() {
+        Fragment friendFragment = new FragmentFriend();
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.detach(friendFragment);
+        ft.attach(friendFragment);
+        ft.commit();
+
+        startActivity(new Intent(AddFriend.this, ProfileActivity.class));
+        finish();
     }
 }

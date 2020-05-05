@@ -1,6 +1,7 @@
 package com.splitapp.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -18,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.splitapp.R;
+import com.splitapp.fragments.FragmentGroups;
 
 import java.util.HashMap;
 
@@ -97,6 +101,7 @@ public class CreateGroup extends AppCompatActivity {
                                     public void onSuccess(Void aVoid) {
                                         progressDialog.dismiss();
                                         Toast.makeText(CreateGroup.this, "Group created", Toast.LENGTH_SHORT).show();
+                                        reloadGroupsFragment();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -134,5 +139,16 @@ public class CreateGroup extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
+    }
+
+    public void reloadGroupsFragment() {
+        Fragment groupFragment = new FragmentGroups();
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.detach(groupFragment);
+        ft.attach(groupFragment);
+        ft.commit();
+
+        startActivity(new Intent(CreateGroup.this, ProfileActivity.class));
+        finish();
     }
 }
