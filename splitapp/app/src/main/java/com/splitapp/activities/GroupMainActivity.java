@@ -18,7 +18,7 @@ import com.splitapp.R;
 
 public class GroupMainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
-    private String groupId,myGroupRole="";
+    private String groupTitle,groupId,myGroupRole="";
     private ActionBar actionBar;
     private FloatingActionButton AddFriendBtnGrp;
 
@@ -35,7 +35,9 @@ public class GroupMainActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setTitle(getIntent().getStringExtra("groupTitle"));
+        groupTitle=getIntent().getStringExtra("groupTitle");
+        groupId=getIntent().getStringExtra("groupId");
+        actionBar.setTitle(groupTitle);
 
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
@@ -46,6 +48,7 @@ public class GroupMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(GroupMainActivity.this,GroupParticipantAddActivity.class);
+                intent.putExtra("groupTitle",groupTitle);
                 intent.putExtra("groupId",groupId);
                 startActivity(intent);
 

@@ -29,7 +29,7 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
     private RecyclerView usersRv;
     private ActionBar actionBar;
     private FirebaseAuth firebaseAuth;
-    private String groupId;
+    private String groupId,groupTitle;
     private FirebaseFirestore db;
     private  String myGroupRole;
     private ArrayList<ModelFriendList> friendsList;
@@ -48,6 +48,7 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
         firebaseAuth=FirebaseAuth.getInstance();
 
         usersRv=findViewById(R.id.usersRv);
+        groupTitle=getIntent().getStringExtra("groupTitle");
         groupId=getIntent().getStringExtra("groupId");
         loadGroupInfo();
         getAllFriends();
@@ -74,10 +75,11 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
                                             friendsList.clear();
                                             for (QueryDocumentSnapshot document1 : task.getResult()) {
                                                 //ModelFriendList modelFriendList= (ModelFriendList) document1.get(String.valueOf(ModelFriendList.class));
-                                                final String f_id=document1.get("friendId").toString();
+                                                final String f_id=document1.getId();
+                                                Log.d("frnd_id",f_id);
                                                 final String f_name = document1.get("friendName").toString();
                                                 final String f_email=document1.get("friendEmail").toString();
-                                                final int f_amt = (int) document1.get("transactionAmount");
+                                                final int f_amt = Integer.parseInt(document1.get("transactionAmount").toString());
                                                 final String f_phone = document1.get("friendPhone").toString();
                                                 ModelFriendList model = new ModelFriendList(f_name,f_email,f_phone,f_id,f_amt);
                                                 if(model.getUid()!=null) {
@@ -112,6 +114,7 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
     }
     private void loadGroupInfo() {
         String user_id = firebaseAuth.getUid();
+
         final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Groups");
         rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -120,27 +123,32 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
                     for (final QueryDocumentSnapshot document : task.getResult()) {
 
                         final String g_id = document.getId();
-                        final String g_title = document.get("groupTitle").toString();
-                        final String g_desc = document.get("groupDescription").toString();
-                        final String g_creator = document.get("createdBy").toString();
-                        final String g_time = document.get("timestamp").toString();
-                        actionBar.setTitle("Add Participants");
+                        if (groupId.equals(g_id)) {
+                            final String g_title = document.get("groupTitle").toString();
+                            final String g_desc = document.get("groupDescription").toString();
+                            final String g_creator = document.get("createdBy").toString();
+                            final String g_time = document.get("timestamp").toString();
+                            actionBar.setTitle("Add Participants");
+                            //Log.d("grp_title",g_title);
+                            rootRef.document(document.getId()).collection("Participants").get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                            /*myGroupRole=document.get("role").toString();
+                                            actionBar.setTitle(g_title+"("+myGroupRole+")");
+                                            getAllFriends();*/
+                                                for (final QueryDocumentSnapshot document1 : task.getResult()) {
+                                                    myGroupRole = document1.get("role").toString();
+                                                    actionBar.setSubtitle(groupTitle + "(" + myGroupRole + ")");
+                                                    getAllFriends();
+                                                }
+                                            } else {
 
-                        rootRef.document(document.getId()).collection("Participants").get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (final QueryDocumentSnapshot document1 : task.getResult()) {
-                                                myGroupRole = document1.get("role").toString();
-                                                actionBar.setSubtitle(g_title + "(" + myGroupRole + ")");
-                                                getAllFriends();
                                             }
-                                        } else {
-
                                         }
-                                    }
-                                });
+                                    });
+                        }
                     }
 
                 } else {
