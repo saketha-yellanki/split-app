@@ -14,27 +14,26 @@
         android:layout_gravity="end|bottom"
         android:layout_marginBottom="10dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/friends_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="554dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_frnds">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/friends_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="554dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_frnds">
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <Button
-        android:id="@+id/expenses_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="bottom"
-        android:padding="15dp"
-        android:text="Add Expenses"/>
+        </androidx.recyclerview.widget.RecyclerView>
 
 
+        <Button
+            android:id="@+id/expenses_btn"
+            android:layout_width="match_parent"
+            android:layout_height="71dp"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="10dp"
+            android:padding="15dp"
+            android:text="Add Expenses" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_btn"

@@ -21,6 +21,7 @@ public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.Ho
     private Context context;
     private ArrayList<ModelFriendList> FriendList;
 
+
     public AdapterFriendList(Context context, ArrayList<ModelFriendList> friendList) {
         this.context = context;
         this.FriendList = friendList;
