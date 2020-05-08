@@ -1,7 +1,6 @@
 package com.splitapp.fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,15 +25,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.splitapp.R;
+import com.splitapp.activities.AddExpenses;
 import com.splitapp.activities.AddFriend;
-import com.splitapp.activities.CreateGroup;
 import com.splitapp.adapters.AdapterFriendList;
-import com.splitapp.adapters.AdapterGroupsList;
-import com.splitapp.adapters.RecyclerViewAdapter;
 import com.splitapp.models.ModelFriendList;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FragmentFriend extends Fragment {
     View v;
@@ -43,7 +38,7 @@ public class FragmentFriend extends Fragment {
     private RecyclerView myrecyclerview;
     private ArrayList<ModelFriendList> friendLists;
     private AdapterFriendList adapterFriendList;
-    private Button Expenses;
+    private Button expenses_btn;
     private FloatingActionButton show_desc_Btn;
     private FirebaseAuth firebaseAuth;
     public FragmentFriend() {
@@ -54,6 +49,7 @@ public class FragmentFriend extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.friends, container, false);
+        expenses_btn = (Button) v.findViewById(R.id.expenses_btn);
         myrecyclerview = v.findViewById(R.id.friends_recyclerview);
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -100,25 +96,38 @@ public class FragmentFriend extends Fragment {
 
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        actionButton = v.findViewById(R.id.fab_btn);
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(getActivity());
+                dlg.setTitle("Add a friend");
+                dlg.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onViewCreated (View view, Bundle savedInstanceState) {
-                        actionButton = v.findViewById(R.id.fab_btn);
-                        actionButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                AlertDialog.Builder dlg = new AlertDialog.Builder(getActivity());
-                                dlg.setTitle("Add a friend");
-                                dlg.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent myIntent = new Intent(getActivity(), AddFriend.class);
-                                        startActivity(myIntent);
-                                        dialog.dismiss();
-                                    }
-                                }).create();
-                                dlg.show();
-                            }
-                        });
-
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent myIntent = new Intent(getActivity(), AddFriend.class);
+                        startActivity(myIntent);
+                        dialog.dismiss();
                     }
-        }
+                }).create();
+                dlg.show();
+            }
+        });
+
+        expenses_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openaddexp();
+            }
+        });
+
+    }
+
+    public void openaddexp() {
+        Intent intent = new Intent(getActivity(), AddExpenses.class);
+        startActivity(intent);
+
+    }
+}
