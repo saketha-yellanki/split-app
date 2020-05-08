@@ -21,7 +21,7 @@
             app:boxCornerRadiusBottomStart="30dp"
             app:boxCornerRadiusTopEnd="30dp"
             app:boxCornerRadiusTopStart="30dp"
-            app:boxBackgroundColor="#FFF">
+            app:boxBackgroundColor="#00F">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id = "@+id/email"
@@ -47,7 +47,7 @@
             app:boxCornerRadiusBottomStart="30dp"
             app:boxCornerRadiusTopEnd="30dp"
             app:boxCornerRadiusTopStart="30dp"
-            app:boxBackgroundColor="#FFF">
+            app:boxBackgroundColor="#00F">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id = "@+id/amount"
