@@ -52,6 +52,7 @@ public class AdapterGroupsList extends RecyclerView.Adapter<AdapterGroupsList.Ho
                 //meghana -- for you
                 Intent intent=new Intent(context, GroupMainActivity.class);
                 intent.putExtra("groupTitle",model.getGroupTitle());
+                intent.putExtra("groupId",model.getGroupId());
                 context.startActivity(intent);
 
             }
