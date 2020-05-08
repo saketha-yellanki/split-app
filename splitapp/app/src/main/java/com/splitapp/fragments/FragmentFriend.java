@@ -44,6 +44,7 @@ public class FragmentFriend extends Fragment {
     private ArrayList<ModelFriendList> friendLists;
     private AdapterFriendList adapterFriendList;
     private Button Expenses;
+    private FloatingActionButton show_desc_Btn;
     private FirebaseAuth firebaseAuth;
     public FragmentFriend() {
     }
