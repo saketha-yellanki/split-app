@@ -35,6 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ViewPAgeAdapter adapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         final FirebaseUser this_user = FirebaseAuth.getInstance().getCurrentUser();
         String f_uid = this_user.getUid();
+
         signout_btn = findViewById(R.id.signout_btn);
         tablayout = (TabLayout) findViewById(R.id.tablayout_id);
         viewPager = (ViewPager) findViewById(R.id.ViewPager_id);
@@ -53,6 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         viewPager.setAdapter(adapter);
         tablayout.setupWithViewPager(viewPager);
+
 
 //        signout_btn.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -106,4 +109,5 @@ public class ProfileActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
