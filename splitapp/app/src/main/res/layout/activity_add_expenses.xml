@@ -5,50 +5,58 @@
     android:layout_height="match_parent"
     tools:context=".activities.AddExpenses"
     android:orientation="vertical">
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="top"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/email_tl"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:hint="Enter Email">
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:isScrollContainer="true">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email_et"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email_tl"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:hint="Enter Email">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/amount_tl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:hint="Enter Amount">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/amount_et"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/amount_tl"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/email_tl"
+                android:layout_margin="15dp"
+                android:hint="Enter Amount">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/amount_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
-        <MaterialButton
-            android:id="@+id/add_exp_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="50dp"
-            android:padding="15dp"
-            android:background="@color/colorPrimary"
-            android:text="Confirm" />
-    </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/add_exp_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/amount_tl"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="Confirm"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
+    </ScrollView>
 
 </LinearLayout>

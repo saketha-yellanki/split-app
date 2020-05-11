@@ -1,6 +1,8 @@
 package com.splitapp.activities;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +24,21 @@ public class AddExpenses extends AppCompatActivity {
         email_inp = findViewById(R.id.email_et);
         amount_inp = findViewById(R.id.amount_et);
         add_exp_btn = findViewById(R.id.add_exp_btn);
+
+        add_exp_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String[] emails = null;
+                if (!TextUtils.isEmpty(email_inp.getText())) {
+                    String input = email_inp.getText().toString();
+                    emails = input.split("\n");
+
+                }
+
+            }
+        });
+
+
 
     }
 }
