@@ -39,6 +39,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
     private FirebaseFirestore db;
     private FirebaseAuth firebaseAuth;
 
+
     public AdapterParticipantAdd(Context context,ArrayList<ModelFriendList> friendsList,String groupId,String myGroupRole){
         this.context=context;
         this.friendsList=friendsList;
@@ -60,6 +61,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
         String email=modelFriendList.getEmail();
         final String uid=modelFriendList.getUid();
 
+
         holder.nameTv.setText(name);
         holder.emailTv.setText(email);
 
@@ -71,37 +73,56 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                   //int pos=position;
                   Log.d("position", String.valueOf(position)) ;
                   //final ModelFriendList modelFriendList=friendsList.get(position);
-                /*CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Groups");
+
+
+                CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Groups");
                 rootRef.document(groupId).collection("Participants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
                         if(task.isSuccessful()){
+                            int var=0;
+                            Log.d("var", String.valueOf(var));
                             for (QueryDocumentSnapshot document : task.getResult()){
-                                //final String g_id = document.getId();
-                                //final String g_role = document.get("role").toString();
-                                //final String g_time = document.get("timestamp").toString();
-                                String[] options;
+                                final ModelFriendList modelFriendList=friendsList.get(position);
+                                Log.d("docId",document.getId());
+                                Log.d("frId",modelFriendList.getUid());
 
-                                AlertDialog.Builder builder=new AlertDialog.Builder(context);
-                                builder.setTitle("Choose an option");
-                                if(myGroupRole.equals("creator")){
-                                    options=new String[]{"Remove User"};
-                                    builder.setItems(options, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            removeParticipant(modelFriendList);
-                                        }
-                                    }).show();
+                                if(document.getId().equals(modelFriendList.getUid())){
+                                    var++;
                                 }
-                                else{
 
-                                }
+
+                            }
+                            Log.d("var", String.valueOf(var));
+                            if(var==1) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setTitle("Remove Participant")
+                                        .setMessage("Are you sure to remove this user from this group?")
+                                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                final ModelFriendList modelFriendList = friendsList.get(position);
+                                                removeParticipant(modelFriendList);
+                                            }
+                                        })
+                                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
+                            }
+                            else{
                                 AlertDialog.Builder builder=new AlertDialog.Builder(context);
                                 builder.setTitle("Add participant")
                                         .setMessage("Add this user in this group?")
                                         .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                //Log.d("position", String.valueOf(position)) ;
+                                                final ModelFriendList modelFriendList=friendsList.get(position);
+                                                //Log.d("uid",modelFriendList.getUid());
                                                 addParticipant(modelFriendList);
                                             }
                                         })
@@ -115,34 +136,21 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
 
                         }
                         else{
-                                AlertDialog.Builder builder=new AlertDialog.Builder(context);
-                                builder.setTitle("Add participant")
-                                        .setMessage("Add this user in this group?")
-                                        .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                addParticipant(modelFriendList);
-                                            }
-                                        })
-                                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        }).show();
+
                         }
                     }
-                });*/
+                });
 
-                AlertDialog.Builder builder=new AlertDialog.Builder(context);
+
+                /*AlertDialog.Builder builder=new AlertDialog.Builder(context);
                 builder.setTitle("Add participant")
                         .setMessage("Add this user in this group?")
                         .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.d("position", String.valueOf(position)) ;  
+                                //Log.d("position", String.valueOf(position)) ;
                                 final ModelFriendList modelFriendList=friendsList.get(position);
-                                  Log.d("uid",modelFriendList.getUid());
+                                  //Log.d("uid",modelFriendList.getUid());
                                 addParticipant(modelFriendList);
                             }
                         })
@@ -151,7 +159,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
-                        }).show();
+                        }).show();*/
 
             }
         });
