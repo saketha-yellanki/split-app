@@ -19,5 +19,6 @@
     <string name="grp_title">Enter group title</string>
     <string name="grp_des">Enter group description</string>
     <string name="yourself">With Yourself and :</string>
+    <string name="names_req">Enter Names</string>
 
 </resources>

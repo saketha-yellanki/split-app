@@ -26,26 +26,22 @@
                 android:text="@string/yourself"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/email_tl"
+
+
+            <MultiAutoCompleteTextView
+                android:id="@+id/email_et_auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/names_req"
                 android:layout_margin="15dp"
                 android:layout_below="@+id/yourself_tv"
-                android:hint="Enter Email">
-
-                <com.google.android.material.textview.MaterialAutoCompleteTextView
-                    android:id="@+id/email_et_auto"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/amount_tl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/email_tl"
+                android:layout_below="@+id/email_et_auto"
                 android:layout_margin="15dp"
                 android:hint="Enter Amount">
 

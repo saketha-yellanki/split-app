@@ -1,22 +1,27 @@
 package com.splitapp.activities;
 
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.MultiAutoCompleteTextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textview.MaterialAutoCompleteTextView;
 import com.splitapp.R;
+import com.splitapp.models.ModelFriendList;
+
+import java.util.ArrayList;
 
 public class AddExpenses extends AppCompatActivity {
 
-    MaterialAutoCompleteTextView email_inp;
+    MultiAutoCompleteTextView email_inp;
     TextInputEditText amount_inp;
     MaterialButton add_exp_btn;
-
+    ArrayList<ModelFriendList> sharedBy = FriendsList.getInstance().friends;
+    ArrayList<String> names = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,20 +32,27 @@ public class AddExpenses extends AppCompatActivity {
         amount_inp = findViewById(R.id.amount_et);
         add_exp_btn = findViewById(R.id.add_exp_btn);
 
-        add_exp_btn.setOnClickListener(new View.OnClickListener() {
+        loadNames();
+
+        email_inp.setAdapter(new ArrayAdapter<>(AddExpenses.this, android.R.layout.simple_list_item_1, names));
+        email_inp.setThreshold(1);
+        email_inp.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+
+        email_inp.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                String[] emails = null;
-                if (!TextUtils.isEmpty(email_inp.getText())) {
-                    String input = email_inp.getText().toString();
-                    emails = input.split("\n");
-
-                }
-
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                email_inp.showDropDown();
+                email_inp.requestFocus();
+                return false;
             }
         });
 
 
+    }
 
+    private void loadNames() {
+        for (int i = 0; i < sharedBy.size(); i++) {
+            names.add(i, sharedBy.get(i).getName());
+        }
     }
 }
