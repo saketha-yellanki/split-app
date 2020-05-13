@@ -18,5 +18,6 @@
     <string name="create_group">Create a group</string>
     <string name="grp_title">Enter group title</string>
     <string name="grp_des">Enter group description</string>
+    <string name="yourself">With Yourself and :</string>
 
 </resources>

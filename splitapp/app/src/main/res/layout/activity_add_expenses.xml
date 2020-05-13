@@ -17,15 +17,25 @@
             android:layout_gravity="top"
             android:isScrollContainer="true">
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/yourself_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:lines="1"
+                android:text="@string/yourself"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/email_tl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
+                android:layout_below="@+id/yourself_tv"
                 android:hint="Enter Email">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/email_et"
+                <com.google.android.material.textview.MaterialAutoCompleteTextView
+                    android:id="@+id/email_et_auto"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 

@@ -3,7 +3,6 @@ package com.splitapp.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -23,21 +22,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-//import com.google.firebase.database.DataSnapshot;
-//import com.google.firebase.database.DatabaseError;
-//import com.google.firebase.database.FirebaseDatabase;
-//import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 import com.splitapp.R;
-import com.splitapp.adapters.AdapterFriendList;
 import com.splitapp.fragments.FragmentFriend;
 import com.splitapp.models.ModelFriendList;
 
 import java.util.HashMap;
+
+//import com.google.firebase.database.DataSnapshot;
+//import com.google.firebase.database.DatabaseError;
+//import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.database.ValueEventListener;
 
 public class AddFriend extends AppCompatActivity {
 
@@ -163,6 +161,7 @@ public class AddFriend extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             progressDialog.dismiss();
+                                            addFriendLocal(friendNamest, friendEmailst, friendPhonest, fid, 0);
                                             Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
                                             reloadFriendFragment();
 
@@ -196,6 +195,13 @@ public class AddFriend extends AppCompatActivity {
 
 
     }
+
+    private void addFriendLocal(String friendNamest, String friendEmailst, String fid, String friendPhonest, int i) {
+        ModelFriendList modelFriendList = new ModelFriendList(friendNamest, friendEmailst, friendPhonest, fid, 0);
+        FriendsList.getInstance().friends.add(modelFriendList);
+
+    }
+
 
     private void addFriend(String g_timestamp) {
 
