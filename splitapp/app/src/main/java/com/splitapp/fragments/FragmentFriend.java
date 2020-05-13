@@ -78,7 +78,7 @@ public class FragmentFriend extends Fragment {
                     for (final QueryDocumentSnapshot document : task.getResult()) {
                             final String f_name = document.get("friendName").toString();
                             final String f_email=document.get("friendEmail").toString();
-                            final int f_amt = Integer.parseInt((String) document.get("transactionAmount"));
+                        final double f_amt = Double.parseDouble((String) document.get("transactionAmount"));
                             final String f_phone = document.get("friendPhone").toString();
 
                         Log.d("SUCCESS", "Friend Exists");

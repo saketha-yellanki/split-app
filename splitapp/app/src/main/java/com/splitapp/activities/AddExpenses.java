@@ -1,21 +1,26 @@
 package com.splitapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialAutoCompleteTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.splitapp.R;
 import com.splitapp.models.ModelFriendList;
 
@@ -120,24 +125,53 @@ public class AddExpenses extends AppCompatActivity {
         CollectionReference rootref = FirebaseFirestore.getInstance().collection("users");
         if (names.get(pos[0]).toString().equals("Me")) {
             for (int i = 0; i < dividedAmong.size(); i++) {
+
                 double original = Double.parseDouble(sharedBy.get(dividedAmong.get(i)).getAmount());
-                Log.d("share", share + " ");
-                Log.d("originally", original + " ");
                 sharedBy.get(dividedAmong.get(i)).setAmount(share + original);
                 Double current_amt = Double.parseDouble(sharedBy.get(dividedAmong.get(i)).getAmount());
-                Log.d(sharedBy.get(dividedAmong.get(i)).getName(), current_amt + " ");
+
                 Map<String, Object> temp = new HashMap<>();
                 temp.put("transactionAmount", (Object) Double.toString(current_amt));
                 rootref.document(sharedBy.get(dividedAmong.get(i)).getUid()).collection("Friends")
                         .document(current_user_id).update(temp);
             }
+            updateLocalWithDb();
         } else {
             ModelFriendList paid_member = sharedBy.get(pos[0]);
             paid_member.setAmount(Double.parseDouble(paid_member.getAmount()) - share);
 
         }
+    }
 
-
+    private void updateLocalWithDb() {
+        final ArrayList<ModelFriendList> friends = FriendsList.getInstance().friends;
+        final CollectionReference rootref = FirebaseFirestore.getInstance().collection("users");
+        rootref.document(current_user_id).collection("Friends").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (int i = 0; i < friends.size(); i++) {
+                            HashMap<String, String> map = new HashMap();
+                            map.put("friendName", friends.get(i).getName());
+                            map.put("friendEmail", friends.get(i).getEmail());
+                            map.put("friendPhone", friends.get(i).getPhone());
+                            map.put("transactionAmount", friends.get(i).getAmount());
+                            rootref.document(current_user_id).collection("Friends").document(friends.get(i).getUid())
+                                    .set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(AddExpenses.this, "Successfully updated", Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(AddExpenses.this, ProfileActivity.class));
+                                        finish();
+                                    } else {
+                                        Toast.makeText(AddExpenses.this, "Failed" + task.getException(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     private void loadNames() {

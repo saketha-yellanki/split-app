@@ -7,16 +7,16 @@ public class ModelFriendList {
     private String amount;
     private String uid;
 
-    public ModelFriendList(String name,String email,String Phone,String uid,int amount) {
+    public ModelFriendList(String name, String email, String phone, String uid, double amount) {
         this.name = name;
         this.email = email;
-        this.amount =Integer.toString(amount);
+        this.amount = Double.toString(amount);
         this.phone = phone;
         this.uid=uid;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -24,7 +24,7 @@ public class ModelFriendList {
     }
 
     public String getPhone() {
-      return phone;
+        return this.phone;
    }
 
     public void setPhone(String phone) {
@@ -32,7 +32,7 @@ public class ModelFriendList {
    }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -47,15 +47,10 @@ public class ModelFriendList {
         return this.amount;
     }
 
-    public String getUid(){ return uid; }
+    public String getUid() {
+        return this.uid;
+    }
 
     public void setUid(String uid){this.uid=uid; }
 
-
-    //private int Photo;
-
-
-    //    public int getPhoto(){
-//        return Photo;
-//    }
 }

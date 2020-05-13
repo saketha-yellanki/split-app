@@ -110,7 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String f_name = doc.get("friendName").toString();
                     String f_email = doc.get("friendEmail").toString();
                     String f_phone = doc.get("friendPhone").toString();
-                    int f_amount = Integer.parseInt(doc.get("transactionAmount").toString());
+                    double f_amount = Double.parseDouble(doc.get("transactionAmount").toString());
                     String f_id = doc.getId();
 
                     ModelFriendList friend = new ModelFriendList(f_name, f_email, f_phone, f_id, f_amount);

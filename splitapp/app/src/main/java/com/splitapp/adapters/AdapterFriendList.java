@@ -9,12 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.textview.MaterialTextView;
 import com.splitapp.R;
 import com.splitapp.models.ModelFriendList;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.HolderFriendList> {
 
@@ -40,10 +38,10 @@ public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.Ho
 
         ModelFriendList model = FriendList.get(position);
         String friendname = model.getName();
-        int transactionAmount = Integer.parseInt(model.getAmount());
+        double transactionAmount = Double.parseDouble(model.getAmount());
 
       holder.Friend_name.setText(friendname);
-        holder.Transaction_amount.setText(Integer.toString(transactionAmount));
+        holder.Transaction_amount.setText(Double.toString(transactionAmount));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
