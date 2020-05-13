@@ -196,9 +196,13 @@ public class AddFriend extends AppCompatActivity {
 
     }
 
-    private void addFriendLocal(String friendNamest, String friendEmailst, String fid, String friendPhonest, int i) {
+    private void addFriendLocal(String friendNamest, String friendEmailst, String fid, String friendPhonest, int amount) {
         ModelFriendList modelFriendList = new ModelFriendList(friendNamest, friendEmailst, friendPhonest, fid, 0);
         FriendsList.getInstance().friends.add(modelFriendList);
+
+        for (int i = 0; i < FriendsList.getInstance().friends.size(); i++) {
+            Log.d("All Friends", FriendsList.getInstance().friends.get(i).getName());
+        }
 
     }
 

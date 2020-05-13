@@ -12,18 +12,25 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.splitapp.R;
 import com.splitapp.adapters.ViewPAgeAdapter;
 import com.splitapp.fragments.FragmentFriend;
 import com.splitapp.fragments.FragmentGroups;
 import com.splitapp.fragments.FragmentTransactions;
+import com.splitapp.models.ModelFriendList;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -34,6 +41,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TabLayout tablayout;
     private ViewPager viewPager;
     private ViewPAgeAdapter adapter;
+    final FirebaseUser this_user = FirebaseAuth.getInstance().getCurrentUser();
+    ;
 
 
     @Override
@@ -41,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        final FirebaseUser this_user = FirebaseAuth.getInstance().getCurrentUser();
+        loadFriends();
         String f_uid = this_user.getUid();
 
         signout_btn = findViewById(R.id.signout_btn);
@@ -90,6 +99,25 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }).setNegativeButton(android.R.string.no, null).show();
         }
+    }
+
+    private void loadFriends() {
+        CollectionReference rootref = FirebaseFirestore.getInstance().collection("users").document(this_user.getUid()).collection("Friends");
+        rootref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    String f_name = doc.get("friendName").toString();
+                    String f_email = doc.get("friendEmail").toString();
+                    String f_phone = doc.get("friendPhone").toString();
+                    int f_amount = Integer.parseInt(doc.get("transactionAmount").toString());
+                    String f_id = doc.getId();
+
+                    ModelFriendList friend = new ModelFriendList(f_name, f_email, f_phone, f_id, f_amount);
+                    FriendsList.getInstance().friends.add(friend);
+                }
+            }
+        });
     }
 
     @Override
