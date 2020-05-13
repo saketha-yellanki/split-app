@@ -3,6 +3,7 @@ package com.splitapp.activities;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.MultiAutoCompleteTextView;
 
@@ -46,6 +47,23 @@ public class AddExpenses extends AppCompatActivity {
                 return false;
             }
         });
+
+        email_inp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String selected = adapterView.getItemAtPosition(i).toString();
+                int pos = -1;
+                for (int in = 0; in < names.size(); i++) {
+                    if (names.get(i).equals(selected)) {
+                        pos = i;
+                        break;
+                    }
+                }
+                double amount = Double.parseDouble(amount_inp.getText().toString());
+
+            }
+        });
+
 
 
     }
