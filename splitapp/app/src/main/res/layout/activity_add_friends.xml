@@ -19,7 +19,7 @@
     <LinearLayout
         android:id="@+id/create_grp_layout"
         android:layout_width="match_parent"
-        android:layout_height="565dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
@@ -45,6 +45,7 @@
                 android:inputType="textEmailAddress"
                 android:autofillHints="Enter Email" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/phone_text"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -68,6 +69,7 @@
                 android:layout_height="wrap_content"
                 android:autofillHints="Enter Email" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/name_text"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -102,6 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
                 android:src="@drawable/ic_done_white" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
