@@ -13,6 +13,13 @@
         android:layout_gravity="end|bottom"
         android:layout_marginBottom="10dp">
 
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/expenses_btn_grp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="16dp"
+            android:text="Add Expenses" />
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_btn_group_main"
             android:layout_width="wrap_content"
