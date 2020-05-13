@@ -24,15 +24,12 @@
         </androidx.recyclerview.widget.RecyclerView>
 
 
-        <Button
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/expenses_btn"
-            android:layout_width="match_parent"
-            android:layout_height="71dp"
-            android:layout_gravity="bottom"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="10dp"
-            android:padding="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="16dp"
             android:text="Add Expenses" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

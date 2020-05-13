@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -38,7 +38,7 @@ public class FragmentFriend extends Fragment {
     private RecyclerView myrecyclerview;
     private ArrayList<ModelFriendList> friendLists;
     private AdapterFriendList adapterFriendList;
-    private Button expenses_btn;
+    private ExtendedFloatingActionButton expenses_btn;
     private FloatingActionButton show_desc_Btn;
     private FirebaseAuth firebaseAuth;
     public FragmentFriend() {
@@ -49,7 +49,7 @@ public class FragmentFriend extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.friends, container, false);
-        expenses_btn = (Button) v.findViewById(R.id.expenses_btn);
+        expenses_btn = v.findViewById(R.id.expenses_btn);
         myrecyclerview = v.findViewById(R.id.friends_recyclerview);
         firebaseAuth = FirebaseAuth.getInstance();
 
