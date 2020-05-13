@@ -1,6 +1,7 @@
 package com.splitapp.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,13 +13,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialAutoCompleteTextView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.splitapp.R;
 import com.splitapp.models.ModelFriendList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddExpenses extends AppCompatActivity {
 
+    FirebaseAuth mAuth;
+    String current_user_id;
     MultiAutoCompleteTextView email_inp;
     TextInputEditText amount_inp;
     MaterialButton add_exp_btn;
@@ -32,7 +40,8 @@ public class AddExpenses extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expenses);
-
+        mAuth = FirebaseAuth.getInstance();
+        current_user_id = mAuth.getCurrentUser().getUid();
         email_inp = findViewById(R.id.email_et_auto);
         amount_inp = findViewById(R.id.amount_et);
         add_exp_btn = findViewById(R.id.add_exp_btn);
@@ -69,8 +78,17 @@ public class AddExpenses extends AppCompatActivity {
             }
         });
 
-        names.add(0, "Me");
+        // names.add("Me");
+
         paid_member.setAdapter(new ArrayAdapter<>(AddExpenses.this, android.R.layout.simple_list_item_1, names));
+        paid_member.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                paid_member.showDropDown();
+                paid_member.requestFocus();
+                return false;
+            }
+        });
         paid_member.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -98,14 +116,25 @@ public class AddExpenses extends AppCompatActivity {
 
 
     private void updateTransactionAmounts(double amount) {
-        double share = amount / dividedAmong.size() + 1;
+        double share = amount / (dividedAmong.size() + 1);
+        CollectionReference rootref = FirebaseFirestore.getInstance().collection("users");
         if (names.get(pos[0]).toString().equals("Me")) {
             for (int i = 0; i < dividedAmong.size(); i++) {
-                sharedBy.get(dividedAmong.get(i)).setAmount(share);
+                double original = Double.parseDouble(sharedBy.get(dividedAmong.get(i)).getAmount());
+                Log.d("share", share + " ");
+                Log.d("originally", original + " ");
+                sharedBy.get(dividedAmong.get(i)).setAmount(share + original);
+                Double current_amt = Double.parseDouble(sharedBy.get(dividedAmong.get(i)).getAmount());
+                Log.d(sharedBy.get(dividedAmong.get(i)).getName(), current_amt + " ");
+                Map<String, Object> temp = new HashMap<>();
+                temp.put("transactionAmount", (Object) Double.toString(current_amt));
+                rootref.document(sharedBy.get(dividedAmong.get(i)).getUid()).collection("Friends")
+                        .document(current_user_id).update(temp);
             }
         } else {
             ModelFriendList paid_member = sharedBy.get(pos[0]);
-            paid_member.setAmount(-amount);
+            paid_member.setAmount(Double.parseDouble(paid_member.getAmount()) - share);
+
         }
 
 
@@ -115,5 +144,6 @@ public class AddExpenses extends AppCompatActivity {
         for (int i = 0; i < sharedBy.size(); i++) {
             names.add(i, sharedBy.get(i).getName());
         }
+        names.add("Me");
     }
 }

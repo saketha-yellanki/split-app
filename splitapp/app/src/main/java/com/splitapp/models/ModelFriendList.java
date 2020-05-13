@@ -40,7 +40,7 @@ public class ModelFriendList {
     }
 
     public void setAmount(double num) {
-        this.amount = Double.toString(Double.parseDouble(this.amount) + num);
+        this.amount = Double.toString(num);
     }
 
     public String getAmount() {
