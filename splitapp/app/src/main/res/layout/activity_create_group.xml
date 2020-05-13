@@ -19,7 +19,7 @@
     <LinearLayout
         android:id="@+id/create_grp_layout"
         android:layout_width="match_parent"
-        android:layout_height="565dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
@@ -72,13 +72,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end|bottom"
-        android:layout_marginBottom="10dp">
+            android:layout_margin="10dp">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/create_grp_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_margin="10dp"
             android:src="@drawable/ic_done_white" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
