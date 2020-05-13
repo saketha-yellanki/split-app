@@ -39,8 +39,8 @@ public class ModelFriendList {
         this.email = email;
     }
 
-    public void setAmount(int num){
-        this.amount = this.amount+num;
+    public void setAmount(double num) {
+        this.amount = Double.toString(Double.parseDouble(this.amount) + num);
     }
 
     public String getAmount() {

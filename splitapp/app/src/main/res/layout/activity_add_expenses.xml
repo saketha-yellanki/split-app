@@ -52,11 +52,19 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textview.MaterialAutoCompleteTextView
+                android:id="@+id/paid_by_auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/amount_tl"
+                android:layout_margin="15dp"
+                android:hint="@string/paidBy" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/add_exp_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/amount_tl"
+                android:layout_below="@+id/paid_by_auto"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="@color/colorPrimary"

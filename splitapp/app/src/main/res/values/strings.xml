@@ -20,5 +20,6 @@
     <string name="grp_des">Enter group description</string>
     <string name="yourself">With Yourself and :</string>
     <string name="names_req">Enter Names</string>
+    <string name="paidBy">Paid By</string>
 
 </resources>
