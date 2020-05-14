@@ -22,7 +22,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -31,7 +39,7 @@ import com.splitapp.fragments.FragmentFriend;
 import com.splitapp.models.ModelFriendList;
 
 import java.util.HashMap;
-
+import java.util.Objects;
 //import com.google.firebase.database.DataSnapshot;
 //import com.google.firebase.database.DatabaseError;
 //import com.google.firebase.database.FirebaseDatabase;
@@ -50,7 +58,6 @@ public class AddFriend extends AppCompatActivity {
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private boolean userExists=false;
     private boolean sameUser=false;
-
 
 
     @Override
@@ -128,6 +135,28 @@ public class AddFriend extends AppCompatActivity {
 
         // friend Collection document
 
+        final String current_id = FirebaseAuth.getInstance().getUid();
+        DocumentReference documentref = FirebaseFirestore.getInstance().collection("users").document(current_id);
+        documentref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String current_name = (String) document.get("user_name");
+                        String current_email = (String) document.get("user_email");
+                        String current_mobile = (String) document.get("user_mobile");
+                        checking(current_name,current_email,current_mobile,current_id,friendEmailst);
+                    } else {
+                        Log.d("failed", "No such document");
+                    }
+                } else {
+                    Log.d("failed", "get failed with ", task.getException());
+                }
+            }
+        });
+
         final String uid = user.getUid();
         final HashMap<String, String> hashMap1 = new HashMap<>();
         hashMap1.put("friendName", friendNamest);
@@ -196,7 +225,8 @@ public class AddFriend extends AppCompatActivity {
 
     }
 
-    private void addFriendLocal(String friendNamest, String friendEmailst, String friendPhonest, String fid, int amount) {
+
+            private void addFriendLocal(String friendNamest, String friendEmailst, String friendPhonest, String fid, int amount) {
         ModelFriendList modelFriendList = new ModelFriendList(friendNamest, friendEmailst, friendPhonest, fid, 0);
         FriendsList.getInstance().friends.add(modelFriendList);
 
@@ -205,7 +235,10 @@ public class AddFriend extends AppCompatActivity {
         }
 
     }
-
+    private void addFriendLocal2(String friendNamest, String friendEmailst, String friendPhonest, String fid, int amount) {
+        ModelFriendList modelFriendList = new ModelFriendList(friendNamest, friendEmailst, friendPhonest, fid, 0);
+        // i need to store it in other person collection
+        }
 
     private void addFriend(String g_timestamp) {
 
@@ -233,5 +266,59 @@ public class AddFriend extends AppCompatActivity {
 
         startActivity(new Intent(AddFriend.this, ProfileActivity.class));
         finish();
+    }
+
+    public void checking(String email, final String name, final String mobile, final String Id, final String femail){
+
+        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users");
+        rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (final QueryDocumentSnapshot document : task.getResult()) {
+                        final String fid = document.getId();
+                        final String email = document.get("user_email").toString();
+                        if (femail.equals(email)) {
+                            if (femail.equals(user.getEmail())) {
+                                progressDialog.dismiss();
+                                sameUser=true;
+                                break;
+                            }
+                            Object hashMap1 = null;
+                            db.collection("users").document(fid).collection("Friends").document(Id).set(hashMap1)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            progressDialog.dismiss();
+                                            addFriendLocal2(name, email, mobile, Id, 0);
+                                            Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(AddFriend.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            break;
+
+                        }
+                    }
+                    if(sameUser) {
+                        progressDialog.dismiss();
+                        Toast.makeText(AddFriend.this, "Add a friend", Toast.LENGTH_SHORT).show();
+                        if (!userExists) {
+                            Toast.makeText(AddFriend.this, "No such user", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                } else {
+                    Log.d("FAILED", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
     }
 }
