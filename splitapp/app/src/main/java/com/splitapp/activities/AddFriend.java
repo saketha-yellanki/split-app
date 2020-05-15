@@ -39,6 +39,7 @@ import com.splitapp.fragments.FragmentFriend;
 import com.splitapp.models.ModelFriendList;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 //import com.google.firebase.database.DataSnapshot;
 //import com.google.firebase.database.DatabaseError;
@@ -263,6 +264,33 @@ public class AddFriend extends AppCompatActivity {
         startActivity(new Intent(AddFriend.this, ProfileActivity.class));
         finish();
     }
+    public void send_data(String username, String user_email, String user_mobile, final String uid,String current_id) {
+
+        if (uid != null) {
+            Map<String, Object> note = new HashMap<>();
+            note.put("user_email", user_email);
+            note.put("user_mobile", user_mobile);
+            note.put("user_name", username);
+
+            Log.d("uid ", uid);
+            db.collection("users").document(uid).collection("Friends").document(current_id).set(note)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(AddFriend.this, uid, Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(AddFriend.this, "Failed", Toast.LENGTH_LONG).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(AddFriend.this, "user not logged in", Toast.LENGTH_LONG).show();
+        }
+
+    }
 
     public void checking(String email, final String name, final String mobile, final String Id, final String femail){
 
@@ -288,7 +316,8 @@ public class AddFriend extends AppCompatActivity {
                                         public void onSuccess(Void aVoid) {
                                             progressDialog.dismiss();
                                           //storing the values into the friend database
-                                            Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
+                                            send_data(email,name,mobile,fid,Id);
+                                        Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
