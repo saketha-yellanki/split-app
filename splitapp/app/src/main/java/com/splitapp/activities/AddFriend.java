@@ -227,18 +227,14 @@ public class AddFriend extends AppCompatActivity {
 
 
             private void addFriendLocal(String friendNamest, String friendEmailst, String friendPhonest, String fid, int amount) {
-        ModelFriendList modelFriendList = new ModelFriendList(friendNamest, friendEmailst, friendPhonest, fid, 0);
-        FriendsList.getInstance().friends.add(modelFriendList);
+                ModelFriendList modelFriendList = new ModelFriendList(friendNamest, friendEmailst, friendPhonest, fid, 0);
+                FriendsList.getInstance().friends.add(modelFriendList);
 
-        for (int i = 0; i < FriendsList.getInstance().friends.size(); i++) {
-            Log.d("All Friends", FriendsList.getInstance().friends.get(i).getName());
-        }
+                for (int i = 0; i < FriendsList.getInstance().friends.size(); i++) {
+                    Log.d("All Friends", FriendsList.getInstance().friends.get(i).getName());
+                }
 
-    }
-    private void addFriendLocal2(String friendNamest, String friendEmailst, String friendPhonest, String fid, int amount) {
-        ModelFriendList modelFriendList = new ModelFriendList(friendNamest, friendEmailst, friendPhonest, fid, 0);
-        // i need to store it in other person collection
-        }
+            }
 
     private void addFriend(String g_timestamp) {
 
@@ -278,6 +274,7 @@ public class AddFriend extends AppCompatActivity {
                     for (final QueryDocumentSnapshot document : task.getResult()) {
                         final String fid = document.getId();
                         final String email = document.get("user_email").toString();
+                        //checking for users id
                         if (femail.equals(email)) {
                             if (femail.equals(user.getEmail())) {
                                 progressDialog.dismiss();
@@ -290,7 +287,7 @@ public class AddFriend extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             progressDialog.dismiss();
-                                            addFriendLocal2(name, email, mobile, Id, 0);
+                                          //storing the values into the friend database
                                             Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
                                         }
                                     })
@@ -301,8 +298,8 @@ public class AddFriend extends AppCompatActivity {
                                             Toast.makeText(AddFriend.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
+                            //if found a id the break the for loop
                             break;
-
                         }
                     }
                     if(sameUser) {
