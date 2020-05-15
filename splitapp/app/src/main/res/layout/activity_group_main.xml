@@ -5,13 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.GroupMainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_gravity="bottom">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end|bottom"
         android:layout_marginBottom="10dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/participant_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="554dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_frnds">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/expenses_btn_grp"

@@ -2,16 +2,31 @@ package com.splitapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.splitapp.R;
+import com.splitapp.adapters.AdapterFriendList;
+import com.splitapp.adapters.AdapterParticipantAdd;
+import com.splitapp.models.ModelFriendList;
+
+import java.util.ArrayList;
 
 public class GroupMainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
@@ -19,6 +34,10 @@ public class GroupMainActivity extends AppCompatActivity {
     private ActionBar actionBar;
     private FloatingActionButton AddFriendBtnGrp;
     private ExtendedFloatingActionButton add_exp_grp;
+
+    private RecyclerView myrecyclerview;
+    private ArrayList<ModelFriendList> friendLists;
+    private AdapterFriendList adapterFriendList;
 
 
 
@@ -36,9 +55,27 @@ public class GroupMainActivity extends AppCompatActivity {
         groupTitle=getIntent().getStringExtra("groupTitle");
         groupId=getIntent().getStringExtra("groupId");
         actionBar.setTitle(groupTitle);
+        Log.d("groupId",groupId);
+        myrecyclerview = findViewById(R.id.participant_recyclerview);
+        friendLists = new ArrayList<ModelFriendList>();
+        adapterFriendList = new AdapterFriendList(GroupMainActivity.this, friendLists);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        myrecyclerview.setLayoutManager(llm);
+        myrecyclerview.setAdapter(adapterFriendList);
 
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
+
+
+        getAllParticipants(groupId);
+
+        /*friendLists = new ArrayList<ModelFriendList>();
+        adapterFriendList = new AdapterFriendList(GroupMainActivity.this, friendLists);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        myrecyclerview.setLayoutManager(llm);
+        myrecyclerview.setAdapter(adapterFriendList);*/
 
         AddFriendBtnGrp = findViewById(R.id.fab_btn_group_main);
         add_exp_grp = findViewById(R.id.expenses_btn_grp);
@@ -75,6 +112,71 @@ public class GroupMainActivity extends AppCompatActivity {
         Intent intent=getIntent();
         groupId=intent.getStringExtra("groupId");*/
     }
+
+    private void getAllParticipants(final String groupId){
+        friendLists = new ArrayList<>();
+        final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
+        rootRef1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document:task.getResult()){
+                        final String g_id=document.getId();
+                        if(groupId.equals(g_id)){
+                            rootRef1.document(g_id).collection("Participants").get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                for(QueryDocumentSnapshot document1:task.getResult()) {
+                                                    getParticipantDetails(document1.getId());
+                                                }
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                }
+                else{
+
+                }
+            }
+        });
+
+    }
+
+    private void getParticipantDetails(final String p_id){
+
+        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Users");
+        rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot document2:task.getResult()){
+                        if(p_id.equals(document2.getId())){
+                            final String f_id=document2.getId();
+                            //Log.d("frnd_id",f_id);
+                            final String p_name = document2.get("user_name").toString();
+                            final String p_email=document2.get("user_email").toString();
+                            final double p_amt = Double.parseDouble("0");
+                            final String p_phone = document2.get("user_mobile").toString();
+                            ModelFriendList model = new ModelFriendList(p_name,p_email,p_phone,f_id,p_amt);
+                            if(model.getUid()!=null) {
+                                //if (!firebaseAuth.getUid().equals(f_id)) {
+                                friendLists.add(model);
+                                adapterFriendList = new AdapterFriendList(GroupMainActivity.this, friendLists);
+                                myrecyclerview.setAdapter(adapterFriendList);
+                                //}
+                            }
+                        }
+
+                    }
+                }
+            }
+        });
+
+    }
+
     private void checkUser() {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) {
