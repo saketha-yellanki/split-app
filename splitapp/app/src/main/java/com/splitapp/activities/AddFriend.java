@@ -133,6 +133,13 @@ public class AddFriend extends AppCompatActivity {
 
         addFriend("" + g_timestamp);
 
+        final String uid = user.getUid();
+        final HashMap<String, String> hashMap1 = new HashMap<>();
+        hashMap1.put("friendName", friendNamest);
+        hashMap1.put("friendEmail", friendEmailst);
+        hashMap1.put("friendPhone", friendPhonest);
+        hashMap1.put("transactionAmount", "0");
+
 
         // friend Collection document
 
@@ -148,7 +155,7 @@ public class AddFriend extends AppCompatActivity {
                         String current_name = (String) document.get("user_name");
                         String current_email = (String) document.get("user_email");
                         String current_mobile = (String) document.get("user_mobile");
-                        checking(current_name,current_email,current_mobile,current_id,friendEmailst);
+                        checking(current_email,current_name,current_mobile,current_id,friendEmailst);
                     } else {
                         Log.d("failed", "No such document");
                     }
@@ -158,12 +165,12 @@ public class AddFriend extends AppCompatActivity {
             }
         });
 
-        final String uid = user.getUid();
+        /*final String uid = user.getUid();
         final HashMap<String, String> hashMap1 = new HashMap<>();
         hashMap1.put("friendName", friendNamest);
         hashMap1.put("friendEmail", friendEmailst);
         hashMap1.put("friendPhone", friendPhonest);
-        hashMap1.put("transactionAmount", "0");
+        hashMap1.put("transactionAmount", "0");*/
 
         final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users");
         rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -268,16 +275,17 @@ public class AddFriend extends AppCompatActivity {
 
         if (uid != null) {
             Map<String, Object> note = new HashMap<>();
-            note.put("user_email", user_email);
-            note.put("user_mobile", user_mobile);
-            note.put("user_name", username);
+            note.put("friendEmail", user_email);
+            note.put("friendPhone", user_mobile);
+            note.put("friendName", username);
+            note.put("transactionAmount", "0");
 
             Log.d("uid ", uid);
             db.collection("users").document(uid).collection("Friends").document(current_id).set(note)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(AddFriend.this, uid, Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -292,7 +300,7 @@ public class AddFriend extends AppCompatActivity {
 
     }
 
-    public void checking(String email, final String name, final String mobile, final String Id, final String femail){
+    public void checking(final String email1, final String name, final String mobile, final String Id, final String femail){
 
         final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users");
         rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -309,15 +317,20 @@ public class AddFriend extends AppCompatActivity {
                                 sameUser=true;
                                 break;
                             }
-                            Object hashMap1 = null;
-                            db.collection("users").document(fid).collection("Friends").document(Id).set(hashMap1)
+                            final HashMap<String, String> hashMap11 = new HashMap<>();
+                            hashMap11.put("friendName", name);
+                            hashMap11.put("friendEmail", email1);
+                            hashMap11.put("friendPhone", mobile);
+                            hashMap11.put("transactionAmount", "0");
+
+                            db.collection("users").document(fid).collection("Friends").document(Id).set(hashMap11)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             progressDialog.dismiss();
                                           //storing the values into the friend database
-                                            send_data(email,name,mobile,fid,Id);
-                                        Toast.makeText(AddFriend.this, "Friend Added", Toast.LENGTH_SHORT).show();
+                                            send_data(name,email1,mobile,fid,Id);
+
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
