@@ -18,12 +18,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.splitapp.R;
 import com.splitapp.adapters.AdapterFriendList;
-import com.splitapp.adapters.AdapterParticipantAdd;
 import com.splitapp.models.ModelFriendList;
 
 import java.util.ArrayList;
@@ -129,8 +130,11 @@ public class GroupMainActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if(task.isSuccessful()){
                                                 for(QueryDocumentSnapshot document1:task.getResult()) {
+                                                    Log.d("id->above", document1.getId());
                                                     getParticipantDetails(document1.getId());
                                                 }
+
+
                                             }
                                         }
                                     });
@@ -147,33 +151,63 @@ public class GroupMainActivity extends AppCompatActivity {
 
     private void getParticipantDetails(final String p_id){
 
-        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Users");
-        rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users");
+        final DocumentReference docref = rootRef.document(p_id);
+        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for (QueryDocumentSnapshot document2:task.getResult()){
-                        if(p_id.equals(document2.getId())){
-                            final String f_id=document2.getId();
-                            //Log.d("frnd_id",f_id);
-                            final String p_name = document2.get("user_name").toString();
-                            final String p_email=document2.get("user_email").toString();
-                            final double p_amt = Double.parseDouble("0");
-                            final String p_phone = document2.get("user_mobile").toString();
-                            ModelFriendList model = new ModelFriendList(p_name,p_email,p_phone,f_id,p_amt);
-                            if(model.getUid()!=null) {
-                                //if (!firebaseAuth.getUid().equals(f_id)) {
-                                friendLists.add(model);
-                                adapterFriendList = new AdapterFriendList(GroupMainActivity.this, friendLists);
-                                myrecyclerview.setAdapter(adapterFriendList);
-                                //}
-                            }
-                        }
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot docSnap = task.getResult();
+                    if (docSnap.exists()) {
+                        final String f_id = docSnap.getId();
+                        Log.d("id", f_id);
+                        final String p_name = docSnap.getString("user_name").toString();
+                        final String p_email = docSnap.get("user_email").toString();
+                        final double p_amt = Double.parseDouble("0");
+                        final String p_phone = docSnap.get("user_mobile").toString();
 
+                        ModelFriendList model = new ModelFriendList(p_name, p_email, p_phone, f_id, p_amt);
+                        friendLists.add(model);
+
+                    } else {
+                        Log.d("Error", "Document doesn't exist");
                     }
+                    Log.d("size", friendLists.size() + " ");
+                    adapterFriendList = new AdapterFriendList(GroupMainActivity.this, friendLists);
+                    myrecyclerview.setAdapter(adapterFriendList);
+                } else {
+                    Log.d("Failed", task.getException().toString());
                 }
             }
         });
+
+
+//        rootRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if(task.isSuccessful()){
+//                    for (QueryDocumentSnapshot document2:task.getResult()){
+//                        if(p_id.equals(document2.getId())){
+//                            final String f_id=document2.getId();
+//                            //Log.d("frnd_id",f_id);
+//                            final String p_name = document2.get("user_name").toString();
+//                            final String p_email=document2.get("user_email").toString();
+//                            final double p_amt = Double.parseDouble("0");
+//                            final String p_phone = document2.get("user_mobile").toString();
+//                            ModelFriendList model = new ModelFriendList(p_name,p_email,p_phone,f_id,p_amt);
+//                            if(model.getUid()!=null) {
+//                                //if (!firebaseAuth.getUid().equals(f_id)) {
+//                                friendLists.add(model);
+//                                adapterFriendList = new AdapterFriendList(GroupMainActivity.this, friendLists);
+//                                myrecyclerview.setAdapter(adapterFriendList);
+//                                //}
+//                            }
+//                        }
+//
+//                    }
+//                }
+//            }
+//        });
 
     }
 
