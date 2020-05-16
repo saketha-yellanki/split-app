@@ -40,7 +40,6 @@ public class AddExpenses extends AppCompatActivity {
     ArrayList<String> names = new ArrayList<>();
     final ArrayList<Integer> dividedAmong = new ArrayList<>();
     MaterialAutoCompleteTextView paid_member;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
