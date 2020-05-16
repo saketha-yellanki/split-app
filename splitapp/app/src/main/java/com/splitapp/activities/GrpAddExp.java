@@ -13,8 +13,10 @@ import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -35,7 +37,8 @@ public class GrpAddExp<total_mem> extends AppCompatActivity {
     private ActionBar actionBar;
     private FloatingActionButton AddFriendBtnGrp;
     private ExtendedFloatingActionButton add_exp_grp;
-
+    TextInputEditText amount_grp;
+    MaterialButton grpaddexp_btn;
     private RecyclerView myrecyclerview;
     private ArrayList<ModelFriendList> friendLists;
     private AdapterFriendList adapterFriendList;
@@ -45,6 +48,7 @@ public class GrpAddExp<total_mem> extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grp_add_exp);
+        amount_grp = findViewById(R.id.amount_grp);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
@@ -62,11 +66,14 @@ public class GrpAddExp<total_mem> extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
-
-
-        getNo_Participants(groupId);
-        updateamount(groupId);
-
+        grpaddexp_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                double amount = Double.parseDouble(amount_grp.getText().toString());
+                getNo_Participants(groupId);
+                updateamount(amount,groupId);
+            }
+        });
         AddFriendBtnGrp = findViewById(R.id.fab_btn_group_main);
         add_exp_grp = findViewById(R.id.expenses_btn_grp);
         final String user_id = firebaseAuth.getUid();
@@ -91,7 +98,7 @@ public class GrpAddExp<total_mem> extends AppCompatActivity {
             }
         });
     }
-     int total_mem=0;
+    int total_mem=0;
     private void getNo_Participants(final String groupId) {
         friendLists = new ArrayList<>();
         final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
@@ -125,7 +132,7 @@ public class GrpAddExp<total_mem> extends AppCompatActivity {
         });
 
     }
-    private void updateamount(final String groupId) {
+    private void updateamount(final double amount, final String groupId) {
         friendLists = new ArrayList<>();
         final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
         rootRef1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -142,7 +149,7 @@ public class GrpAddExp<total_mem> extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 for (QueryDocumentSnapshot document1 : task.getResult()) {
                                                     Log.d("id->above", document1.getId());
-                                                    getParticipantamtD(document1.getId());
+                                                    getParticipantamtD(amount,document1.getId());
                                                 }
 
 
@@ -160,7 +167,7 @@ public class GrpAddExp<total_mem> extends AppCompatActivity {
     }
 
 
-    private void getParticipantamtD(final String p_id) {
+    private void getParticipantamtD(final double amount, final String p_id) {
 
         final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users");
         final DocumentReference docref = rootRef.document(p_id);
@@ -175,7 +182,7 @@ public class GrpAddExp<total_mem> extends AppCompatActivity {
                         final String p_name = docSnap.getString("user_name").toString();
                         final String p_email = docSnap.get("user_email").toString();
                         double p_amt = Double.parseDouble("0");
-                        p_amt=p_amt/total_mem;
+                        p_amt += (amount/ total_mem);
                         final String p_phone = docSnap.get("user_mobile").toString();
 
                         ModelFriendList model = new ModelFriendList(p_name, p_email, p_phone, f_id, p_amt);
