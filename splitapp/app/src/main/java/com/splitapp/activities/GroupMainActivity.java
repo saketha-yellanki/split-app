@@ -42,6 +42,7 @@ public class GroupMainActivity extends AppCompatActivity {
 
 
 
+
     //Toolbar toolbar;
 
 
@@ -53,10 +54,12 @@ public class GroupMainActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
+
         groupTitle=getIntent().getStringExtra("groupTitle");
         groupId=getIntent().getStringExtra("groupId");
         actionBar.setTitle(groupTitle);
         Log.d("groupId",groupId);
+
         myrecyclerview = findViewById(R.id.participant_recyclerview);
         friendLists = new ArrayList<ModelFriendList>();
         adapterFriendList = new AdapterFriendList(GroupMainActivity.this, friendLists);
@@ -97,7 +100,10 @@ public class GroupMainActivity extends AppCompatActivity {
         add_exp_grp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GroupMainActivity.this, AddExpenses.class);
+                Intent intent = new Intent(GroupMainActivity.this, GrpAddExp.class);
+                intent.putExtra("groupTitle",groupTitle);
+                intent.putExtra("groupId",groupId);
+                startActivity(intent);
                 Bundle bundle = new Bundle();
             }
         });
@@ -116,40 +122,32 @@ public class GroupMainActivity extends AppCompatActivity {
 
     private void getAllParticipants(final String groupId){
         friendLists = new ArrayList<>();
+        final String current_user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
-        rootRef1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document:task.getResult()){
-                        final String g_id=document.getId();
-                        if(groupId.equals(g_id)){
-                            rootRef1.document(g_id).collection("Participants").get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                for(QueryDocumentSnapshot document1:task.getResult()) {
-                                                    Log.d("id->above", document1.getId());
-                                                    getParticipantDetails(document1.getId());
-                                                }
+        rootRef1.document(groupId).collection("Participants").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document1:task.getResult()) {
+                                Log.d("id->above", document1.getId());
+                                if(current_user_id.equals(document1.getId())){
+
+                                }
+                                else {
+                                    final double p_amt = Double.parseDouble((String) document1.get("transactionAmount"));
+                                    getParticipantDetails(document1.getId(),p_amt);
+                                }
+                            }
 
 
-                                            }
-                                        }
-                                    });
                         }
                     }
-                }
-                else{
-
-                }
-            }
-        });
+                });
 
     }
 
-    private void getParticipantDetails(final String p_id){
+    private void getParticipantDetails(final String p_id, final double p_amt){
 
         final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users");
         final DocumentReference docref = rootRef.document(p_id);
@@ -163,7 +161,7 @@ public class GroupMainActivity extends AppCompatActivity {
                         Log.d("id", f_id);
                         final String p_name = docSnap.getString("user_name").toString();
                         final String p_email = docSnap.get("user_email").toString();
-                        final double p_amt = Double.parseDouble("0");
+                        //final double p_amt = Double.parseDouble((String) docSnap.get("transactionAmount"));
                         final String p_phone = docSnap.get("user_mobile").toString();
 
                         ModelFriendList model = new ModelFriendList(p_name, p_email, p_phone, f_id, p_amt);

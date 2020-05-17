@@ -94,6 +94,7 @@ public class CreateGroup extends AppCompatActivity {
                         hashMap1.put("uid", firebaseAuth.getUid());
                         hashMap1.put("role", "creator");
                         hashMap1.put("timestamp", g_timestamp);
+                        hashMap1.put("transactionAmount","0");
 
                         db.collection("Groups").document(g_timestamp).collection("Participants").document(firebaseAuth.getUid()).set(hashMap1)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {

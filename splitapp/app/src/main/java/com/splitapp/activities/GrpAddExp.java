@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,145 +31,107 @@ import com.splitapp.adapters.AdapterFriendList;
 import com.splitapp.models.ModelFriendList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class GrpAddExp<total_mem> extends AppCompatActivity {
+public class GrpAddExp extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
-    private String groupTitle, groupId, myGroupRole = "";
+    private String groupTitle, groupId;
     private ActionBar actionBar;
-    private FloatingActionButton AddFriendBtnGrp;
-    private ExtendedFloatingActionButton add_exp_grp;
     TextInputEditText amount_grp;
     MaterialButton grpaddexp_btn;
-    private RecyclerView myrecyclerview;
     private ArrayList<ModelFriendList> friendLists;
-    private AdapterFriendList adapterFriendList;
+    FirebaseAuth mAuth;
+    String current_user_id;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grp_add_exp);
+
+        grpaddexp_btn=findViewById(R.id.grpaddexp_btn);
         amount_grp = findViewById(R.id.amount_grp);
+        mAuth = FirebaseAuth.getInstance();
+        current_user_id = mAuth.getCurrentUser().getUid();
+
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
+
         groupTitle = getIntent().getStringExtra("groupTitle");
         groupId = getIntent().getStringExtra("groupId");
-        actionBar.setTitle(groupTitle);
-        Log.d("groupId", groupId);
-        myrecyclerview = findViewById(R.id.participant_recyclerview);
-        friendLists = new ArrayList<ModelFriendList>();
-        adapterFriendList = new AdapterFriendList(GrpAddExp.this, friendLists);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        myrecyclerview.setLayoutManager(llm);
-        myrecyclerview.setAdapter(adapterFriendList);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        checkUser();
         grpaddexp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 double amount = Double.parseDouble(amount_grp.getText().toString());
-                getNo_Participants(groupId);
-                updateamount(amount,groupId);
+                int total_mem=getNo_Participants(groupId);
+                Log.d("total_mem", String.valueOf(total_mem));
+                updateamount(amount,groupId,total_mem);
             }
         });
-        AddFriendBtnGrp = findViewById(R.id.fab_btn_group_main);
-        add_exp_grp = findViewById(R.id.expenses_btn_grp);
+
         final String user_id = firebaseAuth.getUid();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        AddFriendBtnGrp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(GrpAddExp.this, GroupParticipantAddActivity.class);
-                intent.putExtra("groupTitle", groupTitle);
-                intent.putExtra("groupId", groupId);
-                startActivity(intent);
-            }
-        });
-
-        add_exp_grp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(GrpAddExp.this, AddExpenses.class);
-                Bundle bundle = new Bundle();
-            }
-        });
     }
-    int total_mem=0;
-    private void getNo_Participants(final String groupId) {
-        friendLists = new ArrayList<>();
+    int i=0;
+    private int getNo_Participants(final String groupId) {
+        i=0;
         final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
-        rootRef1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        final String g_id = document.getId();
-                        if (groupId.equals(g_id)) {
-                            rootRef1.document(g_id).collection("Participants").get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document1 : task.getResult()) {
-                                                    Log.d("id->above", document1.getId());
-                                                    total_mem=total_mem+1;
-                                                }
+        rootRef1.document(groupId).collection("Participants").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document1 : task.getResult()) {
+                                //Log.d("id->above", document1.getId());
+                                i=i+1;
+                            }
+                        }
+                        else{
 
-
-                                            }
-                                        }
-                                    });
                         }
                     }
-                } else {
-
-                }
-            }
-        });
-
+                });
+        return i;
     }
-    private void updateamount(final double amount, final String groupId) {
+
+
+    private void updateamount(final double amount, final String groupId,int total_mem) {
+        final double share = amount / (total_mem );
+        Log.d("share", String.valueOf(share));
         friendLists = new ArrayList<>();
         final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
-        rootRef1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        final String g_id = document.getId();
-                        if (groupId.equals(g_id)) {
-                            rootRef1.document(g_id).collection("Participants").get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document1 : task.getResult()) {
-                                                    Log.d("id->above", document1.getId());
-                                                    getParticipantamtD(amount,document1.getId());
-                                                }
+        
+        rootRef1.document(groupId).collection("Participants").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document1 : task.getResult()) {
+                                Log.d("id->above", document1.getId());
+                                if(current_user_id.equals(document1.getId())){
+
+                                }
+                                else{
+                                    double p_amt = Double.parseDouble((String) document1.get("transactionAmount"));
+                                    p_amt=p_amt+share;
+                                    getParticipantamtD(document1.getId(),p_amt);
+                                }
+                            }
 
 
-                                            }
-                                        }
-                                    });
                         }
                     }
-                } else {
-
-                }
-            }
-        });
+                });
 
     }
 
 
-    private void getParticipantamtD(final double amount, final String p_id) {
-
+    private void getParticipantamtD(final String p_id,final double p_amt) {
         final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users");
         final DocumentReference docref = rootRef.document(p_id);
         docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -179,21 +142,37 @@ public class GrpAddExp<total_mem> extends AppCompatActivity {
                     if (docSnap.exists()) {
                         final String f_id = docSnap.getId();
                         Log.d("id", f_id);
-                        final String p_name = docSnap.getString("user_name").toString();
-                        final String p_email = docSnap.get("user_email").toString();
-                        double p_amt = Double.parseDouble("0");
-                        p_amt += (amount/ total_mem);
-                        final String p_phone = docSnap.get("user_mobile").toString();
-
-                        ModelFriendList model = new ModelFriendList(p_name, p_email, p_phone, f_id, p_amt);
-                        friendLists.add(model);
+                        //double p_amt = Double.parseDouble((String) docSnap.get("transactionAmount"));
+                        /*if(p_amt>=0) {
+                            p_amt =p_amt+share;
+                        }
+                        else{
+                            p_amt-=share;
+                        }*/
+                        Map<String, Object> temp = new HashMap<>();
+                        temp.put("transactionAmount", (Object) Double.toString(p_amt));
+                        final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
+                        rootRef1.document(groupId).collection("Participants").document(p_id).update(temp)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(GrpAddExp.this, "Successfully updated", Toast.LENGTH_LONG).show();
+                                            Intent intent=new Intent(GrpAddExp.this, GroupMainActivity.class);
+                                            intent.putExtra("groupTitle",groupTitle);
+                                            intent.putExtra("groupId",groupId);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            Toast.makeText(GrpAddExp.this, "Failed" + task.getException(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
 
                     } else {
                         Log.d("Error", "Document doesn't exist");
                     }
-                    Log.d("size", friendLists.size() + " ");
-                    adapterFriendList = new AdapterFriendList(GrpAddExp.this, friendLists);
-                    myrecyclerview.setAdapter(adapterFriendList);
+
                 } else {
                     Log.d("Failed", task.getException().toString());
                 }
@@ -201,12 +180,40 @@ public class GrpAddExp<total_mem> extends AppCompatActivity {
         });
     }
 
-    private void checkUser() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-            actionBar.setSubtitle(user.getEmail());
-        }
-    }
+
+
+    /*private void updateLocalWithDb() {
+        final ArrayList<ModelFriendList> friends = FriendsList.getInstance().friends;
+        final CollectionReference rootref = FirebaseFirestore.getInstance().collection("users");
+        rootref.document(current_user_id).collection("Friends").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (int i = 0; i < friends.size(); i++) {
+                            HashMap<String, String> map = new HashMap();
+                            map.put("friendName", friends.get(i).getName());
+                            map.put("friendEmail", friends.get(i).getEmail());
+                            map.put("friendPhone", friends.get(i).getPhone());
+                            map.put("transactionAmount", friends.get(i).getAmount());
+                            rootref.document(current_user_id).collection("Friends").document(friends.get(i).getUid())
+                                    .set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(GrpAddExp.this, "Successfully updated", Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(GrpAddExp.this, GroupMainActivity.class));
+                                        finish();
+                                    } else {
+                                        Toast.makeText(GrpAddExp.this, "Failed" + task.getException(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+    }*/
+
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

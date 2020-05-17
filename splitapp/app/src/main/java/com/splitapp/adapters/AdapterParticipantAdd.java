@@ -171,6 +171,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
         hashMap.put("uid",modelFriendList.getUid());
         hashMap.put("role","participant");
         hashMap.put("timestamp",""+timestamp);
+        hashMap.put("transactionAmount","0");
 
         Log.d("uid",modelFriendList.getUid());
         //
