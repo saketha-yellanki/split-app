@@ -17,20 +17,28 @@
             android:layout_gravity="top"
             android:isScrollContainer="true">
 
-
+            <com.google.android.material.textview.MaterialAutoCompleteTextView
+                android:id="@+id/paid_by_auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:hint="@string/paidBy" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/amount_grp_t1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:hint="Enter Amount here">
+                android:layout_below="@+id/paid_by_auto"
+                android:layout_margin="15dp"
+                android:hint="Enter Amount">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/amount_grp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/amount_grp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
             </com.google.android.material.textfield.TextInputLayout>
+
 
 
             <com.google.android.material.button.MaterialButton

@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,6 +21,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textview.MaterialAutoCompleteTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -35,6 +39,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GrpAddExp extends AppCompatActivity {
+
+
     private FirebaseAuth firebaseAuth;
     private String groupTitle, groupId;
     private ActionBar actionBar;
@@ -43,6 +49,11 @@ public class GrpAddExp extends AppCompatActivity {
     private ArrayList<ModelFriendList> friendLists;
     FirebaseAuth mAuth;
     String current_user_id;
+
+    MaterialAutoCompleteTextView paid_member;
+    ArrayList<String> sharedBy;
+    ArrayList<String> names = new ArrayList<>();
+    final int[] pos = new int[1];
 
 
     @Override
@@ -55,12 +66,40 @@ public class GrpAddExp extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         current_user_id = mAuth.getCurrentUser().getUid();
 
+        paid_member = findViewById(R.id.paid_by_auto);
+        loadNames();
+
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
         groupTitle = getIntent().getStringExtra("groupTitle");
         groupId = getIntent().getStringExtra("groupId");
+
+        paid_member.setAdapter(new ArrayAdapter<>(GrpAddExp.this, android.R.layout.simple_list_item_1, names));
+        paid_member.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                paid_member.showDropDown();
+                paid_member.requestFocus();
+                return false;
+            }
+        });
+        paid_member.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String selected = adapterView.getItemAtPosition(i).toString();
+                int pos2 = -1;
+                for (int in = 0; in < names.size(); i++) {
+                    if (names.get(i).equals(selected)) {
+                        pos2 = i;
+                        break;
+                    }
+                }
+                pos[0] = pos2;
+
+            }
+        });
 
         firebaseAuth = FirebaseAuth.getInstance();
         grpaddexp_btn.setOnClickListener(new View.OnClickListener() {
@@ -218,5 +257,54 @@ public class GrpAddExp extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
+    }
+
+    private void loadNames() {
+        final int[] i = {0};
+        final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
+        //error near grp id(harshitha)
+        rootRef1.document(groupId).collection("Participants").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document1 : task.getResult()) {
+                                if(document1.getId().equals(current_user_id)) {
+                                }
+                                else{
+
+                                final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users");
+
+                                final DocumentReference docref = rootRef.document(document1.getId());
+                                docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot docSnap = task.getResult();
+                                            if (docSnap.exists()) {
+                                                final String name = (String) docSnap.get("user_name");
+                                                names.add(i[0], name);
+                                                i[0]++;
+
+                                            } else {
+                                                Log.d("Error", "Document doesn't exist");
+                                            }
+
+                                        } else {
+                                            Log.d("Failed", task.getException().toString());
+                                        }
+                                    }
+                                });
+                            }
+
+                            }
+                        }
+                        else{
+
+                        }
+                    }
+                });
+        //names.add(i, sharedBy.get(i).getName());
+        names.add("Me");
     }
 }
