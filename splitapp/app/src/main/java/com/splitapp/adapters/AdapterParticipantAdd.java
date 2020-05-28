@@ -165,9 +165,9 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
         });
     }
 
-    private void addParticipant(ModelFriendList modelFriendList) {
+    private void addParticipant(final ModelFriendList modelFriendList) {
         String timestamp=""+System.currentTimeMillis();
-        HashMap<String,String> hashMap=new HashMap<>();
+        final HashMap<String,String> hashMap=new HashMap<>();
         hashMap.put("uid",modelFriendList.getUid());
         hashMap.put("role","participant");
         hashMap.put("timestamp",""+timestamp);
@@ -190,9 +190,69 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                         Toast.makeText(context,""+e.getMessage(),Toast.LENGTH_SHORT).show();
                     }
                 });
+        //updating transactions collection
+        final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Groups");
+        rootRef.document(groupId).collection("Participants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot document : task.getResult()){
+                        if(modelFriendList.getUid().equals(document.getId())){
+
+                        }
+                        else{
+                            final HashMap<String,String> hashMap1=new HashMap<>();
+                            hashMap1.put("transactionAmount","0");
+                            rootRef.document(groupId).collection("Participants").document(modelFriendList.getUid())
+                                    .collection("transactions").document(document.getId()).set(hashMap1);
+                            rootRef.document(groupId).collection("Participants").document(document.getId())
+                                    .collection("transactions").document(modelFriendList.getUid()).set(hashMap1);
+                        }
+                    }
+                }
+            }
+        });
+
+        /*CollectionReference rootRef11 = FirebaseFirestore.getInstance().collection("Groups");
+        rootRef.document(groupId).collection("Participants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot document : task.getResult()){
+                        if(modelFriendList.getUid().equals(document.getId())){
+
+                        }
+                        else{
+                            final HashMap<String,String> hashMap11=new HashMap<>();
+                            hashMap11.put("transactionAmount","0");
+                            rootRef1.document(groupId).collection("Participants").document(document.getId())
+                                    .collection("transactions").document(modelFriendList.getUid()).set(hashMap11);
+                        }
+                    }
+                }
+            }
+        });*/
+
+        //rootRef1.document(groupId).collection("Participants").document(modelFriendList.getUid()).collection("transactions").
+
     }
 
-    private void removeParticipant(ModelFriendList modelFriendList) {
+    private void removeParticipant(final ModelFriendList modelFriendList) {
+
+        final CollectionReference rootRef11 = FirebaseFirestore.getInstance().collection("Groups");
+        rootRef11.document(groupId).collection("Participants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot document : task.getResult()){
+                        rootRef11.document(groupId).collection("Participants").document(document.getId())
+                                .collection("transactions").document(modelFriendList.getUid()).delete();
+
+                    }
+                }
+            }
+        });
+
         final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Groups");
         rootRef.document(groupId).collection("Participants").document(modelFriendList.getUid()).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -207,6 +267,8 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
 
                     }
                 });
+
+
     }
 
     /*private void checkIfAlreadyExists(ModelFriendList modelFriendList, final HolderParticipantAdd holder) {
