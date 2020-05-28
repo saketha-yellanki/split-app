@@ -130,7 +130,7 @@ public class AddExpenses extends AppCompatActivity {
                 Double current_amt = Double.parseDouble(sharedBy.get(dividedAmong.get(i)).getAmount());
 
                 Map<String, Object> temp = new HashMap<>();
-                temp.put("transactionAmount", (Object) Double.toString(current_amt));
+                temp.put("transactionAmount", (Object) Double.toString(-current_amt));
                 rootref.document(sharedBy.get(dividedAmong.get(i)).getUid()).collection("Friends")
                         .document(current_user_id).update(temp);
             }
