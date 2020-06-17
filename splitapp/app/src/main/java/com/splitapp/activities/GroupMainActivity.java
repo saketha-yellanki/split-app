@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.splitapp.R;
 import com.splitapp.adapters.AdapterFriendList;
+import com.splitapp.fragments.FragmentGroups;
 import com.splitapp.models.ModelFriendList;
 
 import java.util.ArrayList;
@@ -55,8 +56,12 @@ public class GroupMainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        groupTitle=getIntent().getStringExtra("groupTitle");
-        groupId=getIntent().getStringExtra("groupId");
+        Intent iin=getIntent();
+        Bundle b=iin.getExtras();
+        if(b!=null){
+            groupTitle=(String)b.get("groupTitle");
+            groupId=(String)b.get("groupId");
+        }
         actionBar.setTitle(groupTitle);
         Log.d("groupId",groupId);
 
@@ -129,14 +134,26 @@ public class GroupMainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document1:task.getResult()) {
+                            for(final QueryDocumentSnapshot document1:task.getResult()) {
                                 Log.d("id->above", document1.getId());
                                 if(current_user_id.equals(document1.getId())){
 
                                 }
                                 else {
-                                    final double p_amt = Double.parseDouble((String) document1.get("transactionAmount"));
-                                    getParticipantDetails(document1.getId(),p_amt);
+                                    rootRef1.document(groupId).collection("Participants").document(current_user_id).collection("transactions").get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    for (QueryDocumentSnapshot document11:task.getResult()){
+                                                        if(document11.getId().equals(document1.getId())){
+                                                            final double p_amt = Double.parseDouble((String) document11.get("transactionAmount"));
+                                                            getParticipantDetails(document11.getId(),p_amt);
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                    /*final double p_amt = Double.parseDouble((String) document1.get("transactionAmount"));
+                                    getParticipantDetails(document1.getId(),p_amt);*/
                                 }
                             }
 
@@ -249,4 +266,12 @@ public class GroupMainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }*/
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Intent intent = new Intent(GroupMainActivity.this, FragmentGroups.class);
+        startActivity(intent);
+        finish();
+    }
 }

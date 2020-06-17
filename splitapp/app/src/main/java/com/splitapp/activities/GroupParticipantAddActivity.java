@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -49,8 +50,14 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
         firebaseAuth=FirebaseAuth.getInstance();
 
         usersRv=findViewById(R.id.usersRv);
-        groupTitle=getIntent().getStringExtra("groupTitle");
-        groupId=getIntent().getStringExtra("groupId");
+        Intent iin=getIntent();
+        Bundle b=iin.getExtras();
+        if(b!=null){
+            groupTitle=(String)b.get("groupTitle");
+            groupId=(String)b.get("groupId");
+        }
+        /*groupTitle=getIntent().getStringExtra("groupTitle");
+        groupId=getIntent().getStringExtra("groupId");*/
         loadGroupInfo();
         getAllFriends();
     }

@@ -245,8 +245,8 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     for (QueryDocumentSnapshot document : task.getResult()){
-                        rootRef11.document(groupId).collection("Participants").document(document.getId())
-                                .collection("transactions").document(modelFriendList.getUid()).delete();
+                        rootRef11.document(groupId).collection("Participants").document(modelFriendList.getUid())
+                                .collection("transactions").document(document.getId()).delete();
 
                     }
                 }

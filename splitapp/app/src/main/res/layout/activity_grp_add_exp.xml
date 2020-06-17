@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/amount_grp_t1"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="300dp"
+                android:layout_marginTop="200dp"
                 android:backgroundTint="@color/colorPrimary"
                 android:text="Proceed"
                 android:textColor="@android:color/white" />

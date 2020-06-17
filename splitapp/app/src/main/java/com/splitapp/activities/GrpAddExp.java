@@ -54,6 +54,7 @@ public class GrpAddExp extends AppCompatActivity {
     ArrayList<String> sharedBy;
     ArrayList<String> names = new ArrayList<>();
     final int[] pos = new int[1];
+    int i=0;
 
 
     @Override
@@ -66,6 +67,13 @@ public class GrpAddExp extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         current_user_id = mAuth.getCurrentUser().getUid();
 
+        Intent iin=getIntent();
+        Bundle b=iin.getExtras();
+        if(b!=null){
+            groupTitle=(String)b.get("groupTitle");
+            groupId=(String)b.get("groupId");
+        }
+
         paid_member = findViewById(R.id.paid_by_auto);
         loadNames();
 
@@ -73,8 +81,9 @@ public class GrpAddExp extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        groupTitle = getIntent().getStringExtra("groupTitle");
-        groupId = getIntent().getStringExtra("groupId");
+
+        /*groupTitle = getIntent().getStringExtra("groupTitle");
+        groupId = getIntent().getStringExtra("groupId");*/
 
         paid_member.setAdapter(new ArrayAdapter<>(GrpAddExp.this, android.R.layout.simple_list_item_1, names));
         paid_member.setOnTouchListener(new View.OnTouchListener() {
@@ -100,13 +109,30 @@ public class GrpAddExp extends AppCompatActivity {
 
             }
         });
+        final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
+        rootRef1.document(groupId).collection("Participants").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document1 : task.getResult()) {
+                                //Log.d("id->above", document1.getId());
+                                i=i+1;
+                            }
+                        }
+                        else{
+
+                        }
+                    }
+                });
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         grpaddexp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 double amount = Double.parseDouble(amount_grp.getText().toString());
-                int total_mem=getNo_Participants(groupId);
+                int total_mem=i;
                 Log.d("total_mem", String.valueOf(total_mem));
                 updateamount(amount,groupId,total_mem);
             }
@@ -116,8 +142,7 @@ public class GrpAddExp extends AppCompatActivity {
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
     }
-    int i=0;
-    private int getNo_Participants(final String groupId) {
+    /*private int getNo_Participants(final String groupId) {
         i=0;
         final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
         rootRef1.document(groupId).collection("Participants").get()
@@ -136,29 +161,81 @@ public class GrpAddExp extends AppCompatActivity {
                     }
                 });
         return i;
-    }
+    }*/
 
 
     private void updateamount(final double amount, final String groupId,int total_mem) {
-        final double share = amount / (total_mem );
+        final double share = amount / (total_mem);
         Log.d("share", String.valueOf(share));
         friendLists = new ArrayList<>();
         final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
-        
+
+        //final String paid_user=paid_member.getText().toString();
         rootRef1.document(groupId).collection("Participants").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document1 : task.getResult()) {
+                            for (final QueryDocumentSnapshot document1 : task.getResult()) {
                                 Log.d("id->above", document1.getId());
                                 if(current_user_id.equals(document1.getId())){
+                                    rootRef1.document(groupId).collection("Participants").document(document1.getId()).collection("transactions").get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if(task.isSuccessful()){
+                                                        for(final QueryDocumentSnapshot document11:task.getResult()){
+                                                            double p_amt = Double.parseDouble((String) document11.get("transactionAmount"));
+                                                            p_amt=p_amt+share;
+                                                            //getParticipantamtD(document11.getId(),p_amt);
+                                                            Map<String,Object> temp = new HashMap<>();
+                                                            temp.put("transactionAmount", Double.toString(p_amt));
+                                                            rootRef1.document(groupId).collection("Participants").document(document1.getId()).collection("transactions").document(document11.getId()).update(temp);
+                                                            //updating amt in frnds
+                                                            final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Users");
+                                                            rootRef.document(current_user_id).collection("Friends").get()
+                                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                            if(task.isSuccessful()){
+                                                                                for (QueryDocumentSnapshot doc:task.getResult()){
+                                                                                    if(doc.getId().equals(document11.getId())){
+                                                                                        double p_amt1 = Double.parseDouble((String) doc.get("transactionAmount"));
+                                                                                        p_amt1=p_amt1-share;
+                                                                                        Map<String,Object> temp1 = new HashMap<>();
+                                                                                        temp1.put("transactionAmount", Double.toString(p_amt1));
+                                                                                        rootRef.document(current_user_id).collection("Friends").document(doc.getId()).update(temp1);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    });
+                                                        }
+                                                    }
 
+                                                }
+                                            });
                                 }
                                 else{
-                                    double p_amt = Double.parseDouble((String) document1.get("transactionAmount"));
-                                    p_amt=p_amt+share;
-                                    getParticipantamtD(document1.getId(),p_amt);
+                                    rootRef1.document(groupId).collection("Participants").document(document1.getId()).collection("transactions").get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if(task.isSuccessful()){
+                                                        for(final QueryDocumentSnapshot document11:task.getResult()){
+                                                            if(document11.getId().equals(current_user_id)){
+                                                                double p_amt = Double.parseDouble((String) document11.get("transactionAmount"));
+                                                                p_amt=p_amt-share;
+                                                                //getParticipantamtD(document11.getId(),p_amt);
+                                                                Map<String, Object> temp = new HashMap<>();
+                                                                temp.put("transactionAmount", Double.toString(p_amt));
+                                                                rootRef1.document(groupId).collection("Participants").document(document1.getId()).collection("transactions").document(document11.getId()).update(temp);
+                                                            }
+                                                        }
+                                                    }
+
+                                                }
+                                            });
                                 }
                             }
 
@@ -166,6 +243,12 @@ public class GrpAddExp extends AppCompatActivity {
                         }
                     }
                 });
+        Toast.makeText(GrpAddExp.this, "Successfully updated", Toast.LENGTH_LONG).show();
+        Intent intent=new Intent(GrpAddExp.this, GroupMainActivity.class);
+        intent.putExtra("groupTitle",groupTitle);
+        intent.putExtra("groupId",groupId);
+        startActivity(intent);
+        finish();
 
     }
 
@@ -260,6 +343,7 @@ public class GrpAddExp extends AppCompatActivity {
     }
 
     private void loadNames() {
+        friendLists= new ArrayList<>();
         final int[] i = {0};
         final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
         //error near grp id(harshitha)
@@ -283,7 +367,13 @@ public class GrpAddExp extends AppCompatActivity {
                                             DocumentSnapshot docSnap = task.getResult();
                                             if (docSnap.exists()) {
                                                 final String name = (String) docSnap.get("user_name");
-                                                names.add(i[0], name);
+                                                String email=(String)docSnap.get("user_email");
+                                                String phone=(String)docSnap.get("user_mobile");
+                                                String uid=docSnap.getId();
+
+                                                ModelFriendList model = new ModelFriendList(name,email,phone,uid,Double.parseDouble("0"));
+                                                friendLists.add(model);
+                                                names.add(i[0], model.getName());
                                                 i[0]++;
 
                                             } else {
