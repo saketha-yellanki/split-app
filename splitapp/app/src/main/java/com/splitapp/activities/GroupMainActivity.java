@@ -267,11 +267,11 @@ public class GroupMainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }*/
 
-    @Override
+    /*@Override
     public void onBackPressed(){
         super.onBackPressed();
         Intent intent = new Intent(GroupMainActivity.this, FragmentGroups.class);
         startActivity(intent);
         finish();
-    }
+    }*/
 }

@@ -36,6 +36,7 @@ import com.splitapp.models.ModelFriendList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GrpAddExp extends AppCompatActivity {
@@ -51,8 +52,10 @@ public class GrpAddExp extends AppCompatActivity {
     String current_user_id;
 
     MaterialAutoCompleteTextView paid_member;
-    ArrayList<String> sharedBy;
-    ArrayList<String> names = new ArrayList<>();
+    String paid_by;
+    //ArrayList<String> names = new ArrayList<>();
+    List<List<String>> names = new ArrayList<>();
+
     final int[] pos = new int[1];
     int i=0;
 
@@ -85,7 +88,7 @@ public class GrpAddExp extends AppCompatActivity {
         /*groupTitle = getIntent().getStringExtra("groupTitle");
         groupId = getIntent().getStringExtra("groupId");*/
 
-        paid_member.setAdapter(new ArrayAdapter<>(GrpAddExp.this, android.R.layout.simple_list_item_1, names));
+        paid_member.setAdapter(new ArrayAdapter<>(GrpAddExp.this, android.R.layout.simple_list_item_1, names.get(0)));
         paid_member.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -99,16 +102,18 @@ public class GrpAddExp extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String selected = adapterView.getItemAtPosition(i).toString();
                 int pos2 = -1;
-                for (int in = 0; in < names.size(); i++) {
-                    if (names.get(i).equals(selected)) {
+                for (int in = 0; in < names.get(0).size(); i++) {
+                    if (names.get(0).get(i).equals(selected)) {
                         pos2 = i;
                         break;
                     }
                 }
                 pos[0] = pos2;
-
+                paid_by=names.get(1).get(pos2);
+                Log.d("paid_by",paid_by);
             }
         });
+
         final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
         rootRef1.document(groupId).collection("Participants").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -142,26 +147,6 @@ public class GrpAddExp extends AppCompatActivity {
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
     }
-    /*private int getNo_Participants(final String groupId) {
-        i=0;
-        final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
-        rootRef1.document(groupId).collection("Participants").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document1 : task.getResult()) {
-                                //Log.d("id->above", document1.getId());
-                                i=i+1;
-                            }
-                        }
-                        else{
-
-                        }
-                    }
-                });
-        return i;
-    }*/
 
 
     private void updateamount(final double amount, final String groupId,int total_mem) {
@@ -178,7 +163,7 @@ public class GrpAddExp extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (final QueryDocumentSnapshot document1 : task.getResult()) {
                                 Log.d("id->above", document1.getId());
-                                if(current_user_id.equals(document1.getId())){
+                                if(paid_by.equals(document1.getId())){
                                     rootRef1.document(groupId).collection("Participants").document(document1.getId()).collection("transactions").get()
                                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                 @Override
@@ -192,8 +177,8 @@ public class GrpAddExp extends AppCompatActivity {
                                                             temp.put("transactionAmount", Double.toString(p_amt));
                                                             rootRef1.document(groupId).collection("Participants").document(document1.getId()).collection("transactions").document(document11.getId()).update(temp);
                                                             //updating amt in frnds
-                                                            final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Users");
-                                                            rootRef.document(current_user_id).collection("Friends").get()
+                                                            /*final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("Users");
+                                                            rootRef.document(paid_by).collection("Friends").get()
                                                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -204,12 +189,37 @@ public class GrpAddExp extends AppCompatActivity {
                                                                                         p_amt1=p_amt1-share;
                                                                                         Map<String,Object> temp1 = new HashMap<>();
                                                                                         temp1.put("transactionAmount", Double.toString(p_amt1));
-                                                                                        rootRef.document(current_user_id).collection("Friends").document(doc.getId()).update(temp1);
+                                                                                        rootRef.document(paid_by).collection("Friends").document(doc.getId()).update(temp1);
                                                                                     }
                                                                                 }
                                                                             }
                                                                         }
-                                                                    });
+                                                                    });*/
+                                                            final CollectionReference rootRef = FirebaseFirestore.getInstance().collection("users");
+                                                            final DocumentReference docref = rootRef.document(paid_by);
+                                                            docref.collection("Friends").document(document11.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        DocumentSnapshot docSnap = task.getResult();
+                                                                        if (docSnap.exists()) {
+                                                                            final String f_id = docSnap.getId();
+                                                                            double p_amt1 = Double.parseDouble((String) docSnap.get("transactionAmount"));
+                                                                            p_amt1=p_amt1-share;
+                                                                            Map<String,Object> temp1 = new HashMap<>();
+                                                                            temp1.put("transactionAmount", Double.toString(p_amt1));
+                                                                            rootRef.document(paid_by).collection("Friends").document(document11.getId()).update(temp1);
+                                                                            rootRef.document(document11.getId()).collection("Friends").document(paid_by).update(temp1);
+
+                                                                        } else {
+                                                                            Log.d("Error", "Document doesn't exist");
+                                                                        }
+
+                                                                    } else {
+                                                                        Log.d("Failed", task.getException().toString());
+                                                                    }
+                                                                }
+                                                            });
                                                         }
                                                     }
 
@@ -223,7 +233,7 @@ public class GrpAddExp extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                     if(task.isSuccessful()){
                                                         for(final QueryDocumentSnapshot document11:task.getResult()){
-                                                            if(document11.getId().equals(current_user_id)){
+                                                            if(document11.getId().equals(paid_by)){
                                                                 double p_amt = Double.parseDouble((String) document11.get("transactionAmount"));
                                                                 p_amt=p_amt-share;
                                                                 //getParticipantamtD(document11.getId(),p_amt);
@@ -345,6 +355,8 @@ public class GrpAddExp extends AppCompatActivity {
     private void loadNames() {
         friendLists= new ArrayList<>();
         final int[] i = {0};
+        final List<String> id1 = new ArrayList<>();
+        final List<String> name1 = new ArrayList<>();
         final CollectionReference rootRef1 = FirebaseFirestore.getInstance().collection("Groups");
         //error near grp id(harshitha)
         rootRef1.document(groupId).collection("Participants").get()
@@ -373,7 +385,8 @@ public class GrpAddExp extends AppCompatActivity {
 
                                                 ModelFriendList model = new ModelFriendList(name,email,phone,uid,Double.parseDouble("0"));
                                                 friendLists.add(model);
-                                                names.add(i[0], model.getName());
+                                                name1.add(i[0], name);
+                                                id1.add(i[0],uid);
                                                 i[0]++;
 
                                             } else {
@@ -395,6 +408,10 @@ public class GrpAddExp extends AppCompatActivity {
                     }
                 });
         //names.add(i, sharedBy.get(i).getName());
-        names.add("Me");
+        name1.add("Me");
+        id1.add(current_user_id);
+
+        names.add(0,name1);
+        names.add(1,id1);
     }
 }
